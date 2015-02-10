@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MainViewController">
@@ -14,9 +16,12 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HeM-Zi-FfD">
-                    <rect key="frame" x="128" y="530" width="64" height="30"/>
-                    <state key="normal" title="Call Uber">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HeM-Zi-FfD">
+                    <rect key="frame" x="24" y="265" width="272" height="38"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="HeM-Zi-FfD" secondAttribute="height" multiplier="275:38" id="6lX-5I-59k"/>
+                    </constraints>
+                    <state key="normal" title="Call Uber" image="uber_button">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
@@ -26,10 +31,16 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="HeM-Zi-FfD" secondAttribute="bottom" constant="8" id="Oyt-Yd-TM0"/>
-                <constraint firstAttribute="centerX" secondItem="HeM-Zi-FfD" secondAttribute="centerX" id="hlb-is-4tM"/>
+                <constraint firstAttribute="centerY" secondItem="HeM-Zi-FfD" secondAttribute="centerY" id="DrN-IV-2a5"/>
+                <constraint firstAttribute="trailing" secondItem="HeM-Zi-FfD" secondAttribute="trailing" constant="24" id="aSC-EB-Dfl"/>
+                <constraint firstItem="HeM-Zi-FfD" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="24" id="nhf-6y-dAE"/>
+                <constraint firstAttribute="centerX" secondItem="HeM-Zi-FfD" secondAttribute="centerX" id="yUd-as-bWT"/>
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+            <point key="canvasLocation" x="140" y="193"/>
         </view>
     </objects>
+    <resources>
+        <image name="uber_button" width="563" height="90"/>
+    </resources>
 </document>

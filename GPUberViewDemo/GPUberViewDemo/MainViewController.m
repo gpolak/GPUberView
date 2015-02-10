@@ -17,17 +17,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    [self performSelector: @selector(callUber) withObject:self afterDelay: 0.0];
 }
 
 - (IBAction)callUber {
-    NSString *serverToken = @"P_DXM1dCDDq_f17lvgk57FBPWmc8vCD6Bwid2ULp";
+    NSString *serverToken = @"your_server_token";
     NSString *clientId = @"your_client_id";
     
-    CLLocationCoordinate2D start = CLLocationCoordinate2DMake(42.384373, -71.077672);
-    CLLocationCoordinate2D end = CLLocationCoordinate2DMake(42.344457, -71.071495);
-//    CLLocationCoordinate2D end = CLLocationCoordinate2DMake(37.7577,-122.4376);
+    CLLocationCoordinate2D start = CLLocationCoordinate2DMake(40.7471787,-73.997494);
+    CLLocationCoordinate2D end = CLLocationCoordinate2DMake(40.712774,-74.006059);
     
     GPUberViewController *uber = [[GPUberViewController alloc] initWithServerKey:serverToken
                                                                         clientId:clientId
