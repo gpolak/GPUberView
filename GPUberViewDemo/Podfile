@@ -3,3 +3,5 @@ platform :ios, '7.0'
 inhibit_all_warnings!
 
 pod 'AFNetworking', '~> 2.5'
+pod 'JSONModel', "~> 1.0"
+pod 'Bolts', "~> 1.1"

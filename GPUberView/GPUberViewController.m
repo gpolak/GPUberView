@@ -7,16 +7,24 @@
 //
 
 #import "GPUberViewController.h"
-#import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKit.h>
-
-#define MINIMUM_ZOOM_ARC 0.014 //approximately 1 miles (1 degree of arc ~= 69 miles)
-#define ANNOTATION_REGION_PAD_FACTOR 1.5
-#define MAX_DEGREES_ARC 360
+#import "GPUberPrice.h"
+#import "GPUberNetworking.h"
+#import "NSDictionary+URLEncoding.h"
+#import "GPUberUtils.h"
 
 @interface GPUberViewController () <UITableViewDataSource, UITableViewDelegate, MKMapViewDelegate>
 
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *tableHeight;
+@property (nonatomic, weak) IBOutlet UITableView *tableView;
+
+@property (nonatomic) NSString *serverToken;
+@property (nonatomic) NSString *clientId;
+@property (nonatomic) CLLocationCoordinate2D startLocation;
+@property (nonatomic) CLLocationCoordinate2D endLocation;
+
+@property (nonatomic) NSArray *prices;
 
 @property (nonatomic) UIColor *previousWindowColor;
 
@@ -24,6 +32,23 @@
 
 
 @implementation GPUberViewController
+
+- (id)initWithServerKey:(NSString *)key
+               clientId:(NSString *)clientId
+                  start:(CLLocationCoordinate2D)start
+                    end:(CLLocationCoordinate2D)end {
+    // TODO: add asserts for params
+    
+    self = [super initWithNibName:nil bundle:nil];
+    if (self) {
+        self.serverToken = key;
+        self.clientId = clientId;
+        self.startLocation = start;
+        self.endLocation = end;
+    }
+    
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -37,26 +62,63 @@
     self.edgesForExtendedLayout = UIRectEdgeNone;
     
     [self initMap];
+    [self initTable];
+    
+//    [self launchUberWithProductId:@"6f72dfc5-27f1-42e8-84db-ccc7a75f6969" clientId:@"70zxopERw9Nx2OeQU8yrUYSpW69N-RVh"];
+}
+
+- (void)launchUberWithProductId:(NSString *)productId clientId:(NSString *)clientId {
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"uber://"]]) {
+        // launch Uber app
+        NSDictionary *params = @{@"product_id": productId,
+                                 @"client_id": clientId,
+                                 @"pickup[latitude]": [NSNumber numberWithDouble:self.startLocation.latitude],
+                                 @"pickup[longitude]": [NSNumber numberWithDouble:self.startLocation.longitude],
+                                 @"dropoff[latitude]": [NSNumber numberWithDouble:self.endLocation.latitude],
+                                 @"dropoff[longitude]": [NSNumber numberWithDouble:self.endLocation.longitude],
+                                 };
+
+        NSString *urlString = [NSString stringWithFormat:@"uber://?action=setPickup&%@", [params urlEncodedString]];
+
+        [GPUberUtils openURL:[NSURL URLWithString:urlString]];
+    } else {
+        // launch mobile site
+        NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                       @"product_id", productId,
+                                       @"client_id", clientId,
+                                       @"pickup_latitude", [NSNumber numberWithDouble:self.startLocation.latitude],
+                                       @"pickup_longitude", [NSNumber numberWithDouble:self.startLocation.longitude],
+                                       @"dropoff_latitude", [NSNumber numberWithDouble:self.endLocation.latitude],
+                                       @"dropoff_longitude", [NSNumber numberWithDouble:self.endLocation.longitude],
+                                       nil];
+        
+        if (self.firstName) [params setObject:self.firstName forKey:@"first_name"];
+        if (self.lastName) [params setObject:self.lastName forKey:@"last_name"];
+        if (self.email) [params setObject:self.email forKey:@"email"];
+        if (self.countryCode) [params setObject:self.countryCode forKey:@"country_code"];
+        if (self.mobileCountryCode) [params setObject:self.mobileCountryCode forKey:@"mobile_country_code"];
+        if (self.mobilePhone) [params setObject:self.mobilePhone forKey:@"mobile_phone"];
+        if (self.zipcode) [params setObject:self.zipcode forKey:@"zipcode"];
+        
+        NSString *urlString = [NSString stringWithFormat:@"https://m.uber.com/sign-up?%@", [params urlEncodedString]];
+        
+        [GPUberUtils openURL:[NSURL URLWithString:urlString]];
+    }
 }
 
 #pragma mark - Map
 
 - (void)initMap {
-    CLLocationCoordinate2D start = CLLocationCoordinate2DMake(42.384373, -71.077672);
-//    CLLocationCoordinate2D end = CLLocationCoordinate2DMake(37.7577, -122.4376);
-    
-    // logan
-    CLLocationCoordinate2D end = CLLocationCoordinate2DMake(42.365613, -71.00956);
-    
-    MKPlacemark *startMark = [[MKPlacemark alloc] initWithCoordinate:start addressDictionary:nil];
-    MKPlacemark *endMark = [[MKPlacemark alloc] initWithCoordinate:end addressDictionary:nil];
+    MKPlacemark *startMark = [[MKPlacemark alloc] initWithCoordinate:self.startLocation addressDictionary:nil];
+    MKPlacemark *endMark = [[MKPlacemark alloc] initWithCoordinate:self.endLocation addressDictionary:nil];
     
     [self.mapView addAnnotation:startMark];
     [self.mapView addAnnotation:endMark];
     // TODO: the bounds should be the min/max route steps, not the annotations since a step can go beyond the annotation
-    [self zoomMapViewToFitAnnotations:self.mapView animated:NO];
+    [GPUberUtils zoomMapViewToFitAnnotations:self.mapView animated:NO];
     
     MKMapItem *startItem = [[MKMapItem alloc] initWithPlacemark:startMark];
+//    MKMapItem *startItem = [MKMapItem mapItemForCurrentLocation];
     MKMapItem *endItem = [[MKMapItem alloc] initWithPlacemark:endMark];
     
     MKDirectionsRequest *request = [[MKDirectionsRequest alloc] init];
@@ -73,43 +135,6 @@
         }
         
     }];
-}
-
-- (void)zoomMapViewToFitAnnotations:(MKMapView *)mapView animated:(BOOL)animated {
-    NSArray *annotations = mapView.annotations;
-    NSInteger count = [mapView.annotations count];
-    if ( count == 0) { return; } //bail if no annotations
-    
-    //convert NSArray of id <MKAnnotation> into an MKCoordinateRegion that can be used to set the map size
-    //can't use NSArray with MKMapPoint because MKMapPoint is not an id
-    MKMapPoint points[count]; //C array of MKMapPoint struct
-    for( int i=0; i<count; i++ ) //load points C array by converting coordinates to points
-    {
-        CLLocationCoordinate2D coordinate = [(id <MKAnnotation>)[annotations objectAtIndex:i] coordinate];
-        points[i] = MKMapPointForCoordinate(coordinate);
-    }
-    //create MKMapRect from array of MKMapPoint
-    MKMapRect mapRect = [[MKPolygon polygonWithPoints:points count:count] boundingMapRect];
-    //convert MKCoordinateRegion from MKMapRect
-    MKCoordinateRegion region = MKCoordinateRegionForMapRect(mapRect);
-    
-    //add padding so pins aren't scrunched on the edges
-    region.span.latitudeDelta  *= ANNOTATION_REGION_PAD_FACTOR;
-    region.span.longitudeDelta *= ANNOTATION_REGION_PAD_FACTOR;
-    //but padding can't be bigger than the world
-    if( region.span.latitudeDelta > MAX_DEGREES_ARC ) { region.span.latitudeDelta  = MAX_DEGREES_ARC; }
-    if( region.span.longitudeDelta > MAX_DEGREES_ARC ){ region.span.longitudeDelta = MAX_DEGREES_ARC; }
-    
-    //and don't zoom in stupid-close on small samples
-    if( region.span.latitudeDelta  < MINIMUM_ZOOM_ARC ) { region.span.latitudeDelta  = MINIMUM_ZOOM_ARC; }
-    if( region.span.longitudeDelta < MINIMUM_ZOOM_ARC ) { region.span.longitudeDelta = MINIMUM_ZOOM_ARC; }
-    //and if there is a sample of 1 we want the max zoom-in instead of max zoom-out
-    if( count == 1 )
-    {
-        region.span.latitudeDelta = MINIMUM_ZOOM_ARC;
-        region.span.longitudeDelta = MINIMUM_ZOOM_ARC;
-    }
-    [mapView setRegion:region animated:animated];
 }
 
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id < MKOverlay >)overlay {
@@ -139,14 +164,45 @@
     [self dismissViewControllerAnimated:YES completion:nil];    
 }
 
-#pragma mark - Table View
+#pragma mark - Table
+
+- (void)initTable {
+    self.tableView.rowHeight = 44;
+    
+    GPUberPrice *uberX = [[GPUberPrice alloc] init];
+    uberX.displayName = @"uberX";
+    uberX.productId = @"6f72dfc5-27f1-42e8-84db-ccc7a75f6969";
+    
+    GPUberPrice *uberBlack = [[GPUberPrice alloc] init];
+    uberBlack.displayName = @"uberBlack";
+    uberBlack.productId = @"6f72dfc5-27f1-42e8-84db-ccc7a75f6969";
+    
+    self.prices = @[uberX, uberBlack];
+    
+//    [[GPUberNetworking pricesForStart:self.startLocation end:self.endLocation serverToken:self.serverToken] continueWithExecutor:[BFExecutor mainThreadExecutor] withBlock:^id(BFTask *task) {
+//        if (task.error) {
+//            NSLog(@"task error: %@", task.error);
+//        } else {
+//            NSLog(@"prices:%@", task.result);
+//            self.prices = task.result;
+//            
+//            self.tableHeight.constant = self.tableView.rowHeight * self.prices.count;
+//            [self.tableView reloadData];
+//        }
+//        
+//        return nil;
+//    }];
+    
+    self.tableHeight.constant = self.tableView.rowHeight * self.prices.count;
+    [self.tableView reloadData];
+}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 4;
+    return self.prices.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -156,9 +212,18 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellId];
     }
     
-    cell.textLabel.text = @"Uber";
+    GPUberPrice *price = [self.prices objectAtIndex:indexPath.row];
+    cell.textLabel.text = price.displayName;
     
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    GPUberPrice *price = [self.prices objectAtIndex:indexPath.row];
+    
+    [self launchUberWithProductId:price.productId clientId:self.clientId];
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 @end

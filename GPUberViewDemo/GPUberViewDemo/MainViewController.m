@@ -22,7 +22,13 @@
 }
 
 - (IBAction)callUber {
-    GPUberViewController *vc = [[GPUberViewController alloc] initWithNibName:nil bundle:nil];
+    NSString *serverToken = @"P_DXM1dCDDq_f17lvgk57FBPWmc8vCD6Bwid2ULp";
+    NSString *clientId = @"your_client_id";
+    
+    CLLocationCoordinate2D start = CLLocationCoordinate2DMake(42.384373, -71.077672);
+    CLLocationCoordinate2D end = CLLocationCoordinate2DMake(42.365613, -71.00956);
+    
+    GPUberViewController *vc = [[GPUberViewController alloc] initWithServerKey:serverToken clientId:clientId start:start end:end];
     UINavigationController *nVc = [[UINavigationController alloc] initWithRootViewController:vc];
     [self presentViewController:nVc animated:YES completion:nil];
 }
