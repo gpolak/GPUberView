@@ -10,6 +10,7 @@
 #import <AFNetworking.h>
 #import <JSONModel.h>
 #import "GPUberPrice.h"
+#import "GPUberProduct.h"
 
 @implementation GPUberNetworking
 
@@ -48,6 +49,40 @@
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [taskSource setError:error];
+    }];
+    
+    return taskSource.task;
+}
+
++ (BFTask *)productsForStart:(CLLocationCoordinate2D)start serverToken:(NSString *)serverToken {
+    NSString *endpoint = @"v1/products";
+    
+    BFTaskCompletionSource *taskSource = [BFTaskCompletionSource taskCompletionSource];
+    
+    NSDictionary *params = @{@"latitude": [NSNumber numberWithDouble:start.latitude],
+                             @"longitude": [NSNumber numberWithDouble:start.longitude]
+                             };
+    
+    [[self GETWithEndpoint:endpoint serverToken:serverToken params:params] continueWithBlock:^id(BFTask *task) {
+        if (task.error) {
+            NSLog(@"%@", task.error);
+            [taskSource setError:task.error];
+        } else {
+            NSMutableArray *products = [NSMutableArray new];
+            NSArray *rawProducts = [task.result objectForKey:@"products"];
+            for (NSDictionary *rawProduct in rawProducts) {
+                NSError *error;
+                GPUberProduct *product = [[GPUberProduct alloc] initWithDictionary:rawProduct error:&error];
+                if (error)
+                    NSLog(@"unable to parse product element:%@", error);
+                else
+                    [products addObject:product];
+            }
+            
+            [taskSource setResult:products];
+        }
+        
+        return nil;
     }];
     
     return taskSource.task;

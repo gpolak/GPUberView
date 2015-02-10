@@ -20,6 +20,11 @@
 		5EAB981D1A89A8B5002965B0 /* GPUberPrice.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAB981C1A89A8B5002965B0 /* GPUberPrice.m */; };
 		5EAB98211A89B75D002965B0 /* NSDictionary+URLEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAB98201A89B75D002965B0 /* NSDictionary+URLEncoding.m */; };
 		5EAB98241A89BC85002965B0 /* GPUberUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAB98231A89BC85002965B0 /* GPUberUtils.m */; };
+		5EAB98281A89C31C002965B0 /* GPUberView.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EAB98271A89C31C002965B0 /* GPUberView.xcassets */; };
+		5EAB982B1A89C4F7002965B0 /* UIColor+GPUberView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAB982A1A89C4F7002965B0 /* UIColor+GPUberView.m */; };
+		5EAB982F1A89C823002965B0 /* GPUberViewElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAB982E1A89C823002965B0 /* GPUberViewElement.m */; };
+		5EAB98331A89CE9A002965B0 /* GPUberViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAB98311A89CE9A002965B0 /* GPUberViewCell.m */; };
+		5EAB98341A89CE9A002965B0 /* GPUberViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5EAB98321A89CE9A002965B0 /* GPUberViewCell.xib */; };
 		E941B3F7D08F9B605082D7FF /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF39ED48A58773013E635B98 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -47,6 +52,14 @@
 		5EAB98201A89B75D002965B0 /* NSDictionary+URLEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+URLEncoding.m"; sourceTree = "<group>"; };
 		5EAB98221A89BC85002965B0 /* GPUberUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUberUtils.h; sourceTree = "<group>"; };
 		5EAB98231A89BC85002965B0 /* GPUberUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUberUtils.m; sourceTree = "<group>"; };
+		5EAB98271A89C31C002965B0 /* GPUberView.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = GPUberView.xcassets; sourceTree = "<group>"; };
+		5EAB98291A89C4F7002965B0 /* UIColor+GPUberView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+GPUberView.h"; sourceTree = "<group>"; };
+		5EAB982A1A89C4F7002965B0 /* UIColor+GPUberView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+GPUberView.m"; sourceTree = "<group>"; };
+		5EAB982D1A89C823002965B0 /* GPUberViewElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUberViewElement.h; sourceTree = "<group>"; };
+		5EAB982E1A89C823002965B0 /* GPUberViewElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUberViewElement.m; sourceTree = "<group>"; };
+		5EAB98301A89CE9A002965B0 /* GPUberViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUberViewCell.h; sourceTree = "<group>"; };
+		5EAB98311A89CE9A002965B0 /* GPUberViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUberViewCell.m; sourceTree = "<group>"; };
+		5EAB98321A89CE9A002965B0 /* GPUberViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GPUberViewCell.xib; sourceTree = "<group>"; };
 		644A085E726B097B643533B2 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		F45B8CF572AF8B4E3AF0845E /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		FF39ED48A58773013E635B98 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -118,22 +131,38 @@
 		5EAB980E1A899A16002965B0 /* GPUberView */ = {
 			isa = PBXGroup;
 			children = (
+				5EAB982C1A89C7FD002965B0 /* data */,
 				5EAB980F1A899A16002965B0 /* GPUberViewController.h */,
 				5EAB98101A899A16002965B0 /* GPUberViewController.m */,
 				5EAB98111A899A16002965B0 /* GPUberViewController.xib */,
-				5EAB98141A89A403002965B0 /* GPUberProduct.h */,
-				5EAB98151A89A403002965B0 /* GPUberProduct.m */,
 				5EAB98171A89A85A002965B0 /* GPUberNetworking.h */,
 				5EAB98181A89A85A002965B0 /* GPUberNetworking.m */,
-				5EAB981B1A89A8B5002965B0 /* GPUberPrice.h */,
-				5EAB981C1A89A8B5002965B0 /* GPUberPrice.m */,
 				5EAB981F1A89B75D002965B0 /* NSDictionary+URLEncoding.h */,
 				5EAB98201A89B75D002965B0 /* NSDictionary+URLEncoding.m */,
 				5EAB98221A89BC85002965B0 /* GPUberUtils.h */,
 				5EAB98231A89BC85002965B0 /* GPUberUtils.m */,
+				5EAB98271A89C31C002965B0 /* GPUberView.xcassets */,
+				5EAB98291A89C4F7002965B0 /* UIColor+GPUberView.h */,
+				5EAB982A1A89C4F7002965B0 /* UIColor+GPUberView.m */,
+				5EAB98301A89CE9A002965B0 /* GPUberViewCell.h */,
+				5EAB98311A89CE9A002965B0 /* GPUberViewCell.m */,
+				5EAB98321A89CE9A002965B0 /* GPUberViewCell.xib */,
 			);
 			name = GPUberView;
 			path = ../GPUberView;
+			sourceTree = "<group>";
+		};
+		5EAB982C1A89C7FD002965B0 /* data */ = {
+			isa = PBXGroup;
+			children = (
+				5EAB981B1A89A8B5002965B0 /* GPUberPrice.h */,
+				5EAB981C1A89A8B5002965B0 /* GPUberPrice.m */,
+				5EAB98141A89A403002965B0 /* GPUberProduct.h */,
+				5EAB98151A89A403002965B0 /* GPUberProduct.m */,
+				5EAB982D1A89C823002965B0 /* GPUberViewElement.h */,
+				5EAB982E1A89C823002965B0 /* GPUberViewElement.m */,
+			);
+			name = data;
 			sourceTree = "<group>";
 		};
 		7415B247A3FF5BF53347A826 /* Pods */ = {
@@ -205,9 +234,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				5EAB98131A899A16002965B0 /* GPUberViewController.xib in Resources */,
+				5EAB98341A89CE9A002965B0 /* GPUberViewCell.xib in Resources */,
 				5EAB97F41A899944002965B0 /* LaunchScreen.xib in Resources */,
 				5EAB980D1A899997002965B0 /* MainViewController.xib in Resources */,
 				5EAB97F11A899944002965B0 /* Images.xcassets in Resources */,
+				5EAB98281A89C31C002965B0 /* GPUberView.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,10 +287,13 @@
 				5EAB981D1A89A8B5002965B0 /* GPUberPrice.m in Sources */,
 				5EAB98121A899A16002965B0 /* GPUberViewController.m in Sources */,
 				5EAB98191A89A85A002965B0 /* GPUberNetworking.m in Sources */,
+				5EAB982F1A89C823002965B0 /* GPUberViewElement.m in Sources */,
 				5EAB97E91A899944002965B0 /* AppDelegate.m in Sources */,
 				5EAB980C1A899997002965B0 /* MainViewController.m in Sources */,
+				5EAB982B1A89C4F7002965B0 /* UIColor+GPUberView.m in Sources */,
 				5EAB97E61A899944002965B0 /* main.m in Sources */,
 				5EAB98241A89BC85002965B0 /* GPUberUtils.m in Sources */,
+				5EAB98331A89CE9A002965B0 /* GPUberViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

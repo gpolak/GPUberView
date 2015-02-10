@@ -8,10 +8,14 @@
 
 #import "GPUberViewController.h"
 #import <MapKit/MapKit.h>
+#import "GPUberViewElement.h"
 #import "GPUberPrice.h"
 #import "GPUberNetworking.h"
 #import "NSDictionary+URLEncoding.h"
 #import "GPUberUtils.h"
+#import "UIColor+GPUberView.h"
+#import <UIImageView+WebCache.h>
+#import "GPUberViewCell.h"
 
 @interface GPUberViewController () <UITableViewDataSource, UITableViewDelegate, MKMapViewDelegate>
 
@@ -24,7 +28,7 @@
 @property (nonatomic) CLLocationCoordinate2D startLocation;
 @property (nonatomic) CLLocationCoordinate2D endLocation;
 
-@property (nonatomic) NSArray *prices;
+@property (nonatomic) NSArray *elements;
 
 @property (nonatomic) UIColor *previousWindowColor;
 
@@ -59,12 +63,60 @@
     cancelButton.tintColor = [UIColor blackColor];
     self.navigationItem.rightBarButtonItem = cancelButton;
     
+    UIImage *logo = [UIImage imageNamed:@"uber_logo_15"];
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:logo];
+    imageView.contentMode = UIViewContentModeCenter;
+    self.navigationItem.titleView = imageView;
+    
+    self.view.backgroundColor = [UIColor uberLightGray];
+    
     self.edgesForExtendedLayout = UIRectEdgeNone;
     
+    [self.tableView registerNib:[UINib nibWithNibName:@"GPUberViewCell" bundle:nil] forCellReuseIdentifier:[GPUberViewCell reuseIdentifier]];
+    
+    [self refreshTable];
     [self initMap];
-    [self initTable];
+    [self initData];
     
 //    [self launchUberWithProductId:@"6f72dfc5-27f1-42e8-84db-ccc7a75f6969" clientId:@"70zxopERw9Nx2OeQU8yrUYSpW69N-RVh"];
+}
+
+- (GPUberViewElement *)elementWithProductId:(NSString *)productId {
+    if (!productId)
+        return nil;
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"productId == %@", productId];
+    NSArray *filteredArray = [self.elements filteredArrayUsingPredicate:predicate];
+    return filteredArray.count > 0 ? filteredArray.firstObject : nil;
+}
+
+- (void)initData {
+    [[[GPUberNetworking productsForStart:self.startLocation serverToken:self.serverToken] continueWithExecutor:[BFExecutor mainThreadExecutor] withSuccessBlock:^id(BFTask *task) {
+        
+        NSArray *products = task.result;
+        NSMutableArray *elements = [NSMutableArray arrayWithCapacity:products.count];
+        for (GPUberProduct *product in products)
+            [elements addObject:[GPUberViewElement elementWithProduct:product]];
+        
+        self.elements = [NSArray arrayWithArray:elements];
+        [self refreshTable];
+        
+        return [GPUberNetworking pricesForStart:self.startLocation end:self.endLocation serverToken:self.serverToken];
+    }] continueWithExecutor:[BFExecutor mainThreadExecutor] withBlock:^id(BFTask *task) {
+        if (task.error) {
+            NSLog(@"error fetching uber data:%@", task.error);
+        } else {
+            NSArray *prices = task.result;
+            for (GPUberPrice *price in prices) {
+                GPUberViewElement *element = [self elementWithProductId:price.productId];
+                [element parametrizeWithPrice:price];
+            }
+            
+            [self refreshTable];
+        }
+        
+        return nil;
+    }];
 }
 
 - (void)launchUberWithProductId:(NSString *)productId clientId:(NSString *)clientId {
@@ -139,7 +191,7 @@
 
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id < MKOverlay >)overlay {
     MKPolylineRenderer *renderer = [[MKPolylineRenderer alloc] initWithOverlay:overlay];
-    renderer.strokeColor = [UIColor blueColor];
+    renderer.strokeColor = [UIColor uberBlue];
     renderer.lineWidth = 5.0;
     return renderer;
 }
@@ -166,18 +218,18 @@
 
 #pragma mark - Table
 
-- (void)initTable {
+- (void)refreshTable {
     self.tableView.rowHeight = 44;
     
-    GPUberPrice *uberX = [[GPUberPrice alloc] init];
-    uberX.displayName = @"uberX";
-    uberX.productId = @"6f72dfc5-27f1-42e8-84db-ccc7a75f6969";
-    
-    GPUberPrice *uberBlack = [[GPUberPrice alloc] init];
-    uberBlack.displayName = @"uberBlack";
-    uberBlack.productId = @"6f72dfc5-27f1-42e8-84db-ccc7a75f6969";
-    
-    self.prices = @[uberX, uberBlack];
+//    GPUberPrice *uberX = [[GPUberPrice alloc] init];
+//    uberX.displayName = @"uberX";
+//    uberX.productId = @"6f72dfc5-27f1-42e8-84db-ccc7a75f6969";
+//    
+//    GPUberPrice *uberBlack = [[GPUberPrice alloc] init];
+//    uberBlack.displayName = @"uberBlack";
+//    uberBlack.productId = @"6f72dfc5-27f1-42e8-84db-ccc7a75f6969";
+//    
+//    self.prices = @[uberX, uberBlack];
     
 //    [[GPUberNetworking pricesForStart:self.startLocation end:self.endLocation serverToken:self.serverToken] continueWithExecutor:[BFExecutor mainThreadExecutor] withBlock:^id(BFTask *task) {
 //        if (task.error) {
@@ -193,7 +245,7 @@
 //        return nil;
 //    }];
     
-    self.tableHeight.constant = self.tableView.rowHeight * self.prices.count;
+    self.tableHeight.constant = self.tableView.rowHeight * self.elements.count;
     [self.tableView reloadData];
 }
 
@@ -202,26 +254,27 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.prices.count;
+    return self.elements.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *cellId = @"cellId";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId];
-    if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellId];
-    }
+    GPUberViewCell *cell = (GPUberViewCell *)[tableView dequeueReusableCellWithIdentifier:[GPUberViewCell reuseIdentifier]];
     
-    GPUberPrice *price = [self.prices objectAtIndex:indexPath.row];
-    cell.textLabel.text = price.displayName;
+    GPUberViewElement *element = [self.elements objectAtIndex:indexPath.row];
+    cell.productNameLabel.text = element.displayName;
+    
+    cell.costEstimateLabel.text = element.estimate;
+    cell.costEstimateLabel.textColor = element.surgeMultiplier > 1 ? [UIColor uberBlue] : [UIColor grayColor];
+    
+    [cell.productImageView sd_setImageWithURL:element.image];
     
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    GPUberPrice *price = [self.prices objectAtIndex:indexPath.row];
+    GPUberViewElement *element = [self.elements objectAtIndex:indexPath.row];
     
-    [self launchUberWithProductId:price.productId clientId:self.clientId];
+    [self launchUberWithProductId:element.productId clientId:self.clientId];
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
