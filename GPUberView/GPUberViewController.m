@@ -124,7 +124,9 @@
 }
 
 - (void)initData {
-    [[[[GPUberNetworking productsForStart:self.startLocation serverToken:self.serverToken] continueWithExecutor:[BFExecutor mainThreadExecutor] withSuccessBlock:^id(BFTask *task) {
+    [[[[GPUberNetworking productsForStart:self.startLocation
+                              serverToken:self.serverToken] continueWithExecutor:[BFExecutor mainThreadExecutor]
+                                                                                               withSuccessBlock:^id(BFTask *task) {
         
         NSArray *products = task.result;
         NSMutableArray *elements = [NSMutableArray arrayWithCapacity:products.count];
@@ -275,32 +277,7 @@
 #pragma mark - Table
 
 - (void)refreshTable {
-    self.tableView.rowHeight = 44;
-    
-//    GPUberPrice *uberX = [[GPUberPrice alloc] init];
-//    uberX.displayName = @"uberX";
-//    uberX.productId = @"6f72dfc5-27f1-42e8-84db-ccc7a75f6969";
-//    
-//    GPUberPrice *uberBlack = [[GPUberPrice alloc] init];
-//    uberBlack.displayName = @"uberBlack";
-//    uberBlack.productId = @"6f72dfc5-27f1-42e8-84db-ccc7a75f6969";
-//    
-//    self.prices = @[uberX, uberBlack];
-    
-//    [[GPUberNetworking pricesForStart:self.startLocation end:self.endLocation serverToken:self.serverToken] continueWithExecutor:[BFExecutor mainThreadExecutor] withBlock:^id(BFTask *task) {
-//        if (task.error) {
-//            NSLog(@"task error: %@", task.error);
-//        } else {
-//            NSLog(@"prices:%@", task.result);
-//            self.prices = task.result;
-//            
-//            self.tableHeight.constant = self.tableView.rowHeight * self.prices.count;
-//            [self.tableView reloadData];
-//        }
-//        
-//        return nil;
-//    }];
-    
+    self.tableView.rowHeight = 44;    
     self.tableHeight.constant = self.tableView.rowHeight * self.elements.count;
     [self.tableView reloadData];
 }
