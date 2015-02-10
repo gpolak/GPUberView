@@ -27,6 +27,7 @@
 @property (nonatomic, weak) IBOutlet UIView *loadingView;
 
 @property (nonatomic) PulsingHaloLayer *pulsingHalo;
+@property (nonatomic) MKRoute *route;
 
 @property (nonatomic) NSString *serverToken;
 @property (nonatomic) NSString *clientId;
@@ -249,11 +250,10 @@
     
     [self.mapView addAnnotation:startMark];
     [self.mapView addAnnotation:endMark];
-    // TODO: the bounds should be the min/max route steps, not the annotations since a step can go beyond the annotation
-    [GPUberUtils zoomMapViewToFitAnnotations:self.mapView animated:NO];
+    // initial zoom before the route is computed
+    [GPUberUtils zoomMapViewToFitAnnotations:self.mapView animated:YES];
     
     MKMapItem *startItem = [[MKMapItem alloc] initWithPlacemark:startMark];
-//    MKMapItem *startItem = [MKMapItem mapItemForCurrentLocation];
     MKMapItem *endItem = [[MKMapItem alloc] initWithPlacemark:endMark];
     
     MKDirectionsRequest *request = [[MKDirectionsRequest alloc] init];
@@ -265,8 +265,9 @@
         if (error || response.routes.count == 0) {
             NSLog(@"error calculating directions:%@", error);
         } else {
-            MKRoute *route = [response.routes firstObject];
-            [self.mapView addOverlay:route.polyline level:MKOverlayLevelAboveRoads];
+            self.route = [response.routes firstObject];
+            [self.mapView addOverlay:self.route.polyline level:MKOverlayLevelAboveRoads];
+            [GPUberUtils zoomMapView:self.mapView toRoute:self.route animated:YES];
         }
     }];
 }
@@ -286,7 +287,7 @@
     [self.tableView reloadData];
     
     // need to adjust zoom since map view rect has changed
-    [GPUberUtils zoomMapViewToFitAnnotations:self.mapView animated:YES];
+    [GPUberUtils zoomMapView:self.mapView toRoute:self.route animated:YES];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

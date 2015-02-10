@@ -20,12 +20,14 @@
 		5EAB981D1A89A8B5002965B0 /* GPUberPrice.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAB981C1A89A8B5002965B0 /* GPUberPrice.m */; };
 		5EAB98211A89B75D002965B0 /* NSDictionary+URLEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAB98201A89B75D002965B0 /* NSDictionary+URLEncoding.m */; };
 		5EAB98241A89BC85002965B0 /* GPUberUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAB98231A89BC85002965B0 /* GPUberUtils.m */; };
-		5EAB98281A89C31C002965B0 /* GPUberView.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EAB98271A89C31C002965B0 /* GPUberView.xcassets */; };
 		5EAB982B1A89C4F7002965B0 /* UIColor+GPUberView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAB982A1A89C4F7002965B0 /* UIColor+GPUberView.m */; };
 		5EAB982F1A89C823002965B0 /* GPUberViewElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAB982E1A89C823002965B0 /* GPUberViewElement.m */; };
 		5EAB98331A89CE9A002965B0 /* GPUberViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAB98311A89CE9A002965B0 /* GPUberViewCell.m */; };
 		5EAB98341A89CE9A002965B0 /* GPUberViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5EAB98321A89CE9A002965B0 /* GPUberViewCell.xib */; };
 		5EAB98371A89E188002965B0 /* GPUberTime.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAB98361A89E188002965B0 /* GPUberTime.m */; };
+		5EB358041A8A984E00F8CBE6 /* uber_logo_15@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5EB358011A8A984E00F8CBE6 /* uber_logo_15@3x.png */; };
+		5EB358051A8A984E00F8CBE6 /* uber_logo_15@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5EB358021A8A984E00F8CBE6 /* uber_logo_15@2x.png */; };
+		5EB358061A8A984E00F8CBE6 /* uber_logo_15.png in Resources */ = {isa = PBXBuildFile; fileRef = 5EB358031A8A984E00F8CBE6 /* uber_logo_15.png */; };
 		E941B3F7D08F9B605082D7FF /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF39ED48A58773013E635B98 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -53,7 +55,6 @@
 		5EAB98201A89B75D002965B0 /* NSDictionary+URLEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+URLEncoding.m"; sourceTree = "<group>"; };
 		5EAB98221A89BC85002965B0 /* GPUberUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUberUtils.h; sourceTree = "<group>"; };
 		5EAB98231A89BC85002965B0 /* GPUberUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUberUtils.m; sourceTree = "<group>"; };
-		5EAB98271A89C31C002965B0 /* GPUberView.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = GPUberView.xcassets; sourceTree = "<group>"; };
 		5EAB98291A89C4F7002965B0 /* UIColor+GPUberView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+GPUberView.h"; sourceTree = "<group>"; };
 		5EAB982A1A89C4F7002965B0 /* UIColor+GPUberView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+GPUberView.m"; sourceTree = "<group>"; };
 		5EAB982D1A89C823002965B0 /* GPUberViewElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUberViewElement.h; sourceTree = "<group>"; };
@@ -63,6 +64,9 @@
 		5EAB98321A89CE9A002965B0 /* GPUberViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GPUberViewCell.xib; sourceTree = "<group>"; };
 		5EAB98351A89E188002965B0 /* GPUberTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUberTime.h; sourceTree = "<group>"; };
 		5EAB98361A89E188002965B0 /* GPUberTime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUberTime.m; sourceTree = "<group>"; };
+		5EB358011A8A984E00F8CBE6 /* uber_logo_15@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "uber_logo_15@3x.png"; sourceTree = "<group>"; };
+		5EB358021A8A984E00F8CBE6 /* uber_logo_15@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "uber_logo_15@2x.png"; sourceTree = "<group>"; };
+		5EB358031A8A984E00F8CBE6 /* uber_logo_15.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = uber_logo_15.png; sourceTree = "<group>"; };
 		644A085E726B097B643533B2 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		F45B8CF572AF8B4E3AF0845E /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		FF39ED48A58773013E635B98 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -134,6 +138,7 @@
 		5EAB980E1A899A16002965B0 /* GPUberView */ = {
 			isa = PBXGroup;
 			children = (
+				5EB358001A8A982E00F8CBE6 /* images */,
 				5EAB982C1A89C7FD002965B0 /* data */,
 				5EAB980F1A899A16002965B0 /* GPUberViewController.h */,
 				5EAB98101A899A16002965B0 /* GPUberViewController.m */,
@@ -144,7 +149,6 @@
 				5EAB98201A89B75D002965B0 /* NSDictionary+URLEncoding.m */,
 				5EAB98221A89BC85002965B0 /* GPUberUtils.h */,
 				5EAB98231A89BC85002965B0 /* GPUberUtils.m */,
-				5EAB98271A89C31C002965B0 /* GPUberView.xcassets */,
 				5EAB98291A89C4F7002965B0 /* UIColor+GPUberView.h */,
 				5EAB982A1A89C4F7002965B0 /* UIColor+GPUberView.m */,
 				5EAB98301A89CE9A002965B0 /* GPUberViewCell.h */,
@@ -168,6 +172,16 @@
 				5EAB98361A89E188002965B0 /* GPUberTime.m */,
 			);
 			name = data;
+			sourceTree = "<group>";
+		};
+		5EB358001A8A982E00F8CBE6 /* images */ = {
+			isa = PBXGroup;
+			children = (
+				5EB358011A8A984E00F8CBE6 /* uber_logo_15@3x.png */,
+				5EB358021A8A984E00F8CBE6 /* uber_logo_15@2x.png */,
+				5EB358031A8A984E00F8CBE6 /* uber_logo_15.png */,
+			);
+			name = images;
 			sourceTree = "<group>";
 		};
 		7415B247A3FF5BF53347A826 /* Pods */ = {
@@ -241,9 +255,11 @@
 				5EAB98131A899A16002965B0 /* GPUberViewController.xib in Resources */,
 				5EAB98341A89CE9A002965B0 /* GPUberViewCell.xib in Resources */,
 				5EAB97F41A899944002965B0 /* LaunchScreen.xib in Resources */,
+				5EB358051A8A984E00F8CBE6 /* uber_logo_15@2x.png in Resources */,
 				5EAB980D1A899997002965B0 /* MainViewController.xib in Resources */,
+				5EB358041A8A984E00F8CBE6 /* uber_logo_15@3x.png in Resources */,
+				5EB358061A8A984E00F8CBE6 /* uber_logo_15.png in Resources */,
 				5EAB97F11A899944002965B0 /* Images.xcassets in Resources */,
-				5EAB98281A89C31C002965B0 /* GPUberView.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -398,7 +414,7 @@
 			baseConfigurationReference = 644A085E726B097B643533B2 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-2";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				INFOPLIST_FILE = GPUberViewDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -410,7 +426,7 @@
 			baseConfigurationReference = F45B8CF572AF8B4E3AF0845E /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-2";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				INFOPLIST_FILE = GPUberViewDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";

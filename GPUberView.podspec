@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/gpolak/GPUberView.git", :tag => "0.2" }
 
   s.source_files = 'GPUberView'
-  s.resources = 'GPUberView/*.{xib}', 'GPUberView/*.{xcassets}'
+  s.resources = 'GPUberView/*.{xib}', 'GPUberView/*.{png}'
   s.requires_arc = true
 
   s.dependency 'AFNetworking', '~> 2.5'

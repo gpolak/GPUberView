@@ -15,5 +15,6 @@
 + (UILabel *)errorLabelWithText:(NSString *)text;
 + (void)openURL:(NSURL *)url;
 + (void)zoomMapViewToFitAnnotations:(MKMapView *)mapView animated:(BOOL)animated;
++ (void)zoomMapView:(MKMapView *)mapView toRoute:(MKRoute *)route animated:(BOOL)animated;
 
 @end

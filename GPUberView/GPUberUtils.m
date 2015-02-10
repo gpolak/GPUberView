@@ -69,7 +69,29 @@
 }
 
 + (void)zoomMapView:(MKMapView *)mapView toRoute:(MKRoute *)route animated:(BOOL)animated {
+    if (!route)
+        return;
     
+    // add padding
+    MKMapRect mapRect = [[MKPolygon polygonWithPoints:route.polyline.points count:route.polyline.pointCount] boundingMapRect];
+    UIEdgeInsets insets = UIEdgeInsetsMake(50, 20, 30, 20);
+    mapRect = [mapView mapRectThatFits:mapRect edgePadding:insets];
+    MKCoordinateRegion region = MKCoordinateRegionForMapRect(mapRect);
+    
+    //but padding can't be bigger than the world
+    if( region.span.latitudeDelta > MAX_DEGREES_ARC ) { region.span.latitudeDelta  = MAX_DEGREES_ARC; }
+    if( region.span.longitudeDelta > MAX_DEGREES_ARC ){ region.span.longitudeDelta = MAX_DEGREES_ARC; }
+    
+    //and don't zoom in stupid-close on small samples
+    if( region.span.latitudeDelta  < MINIMUM_ZOOM_ARC ) { region.span.latitudeDelta  = MINIMUM_ZOOM_ARC; }
+    if( region.span.longitudeDelta < MINIMUM_ZOOM_ARC ) { region.span.longitudeDelta = MINIMUM_ZOOM_ARC; }
+    //and if there is a sample of 1 we want the max zoom-in instead of max zoom-out
+    if( route.polyline.pointCount == 1 )
+    {
+        region.span.latitudeDelta = MINIMUM_ZOOM_ARC;
+        region.span.longitudeDelta = MINIMUM_ZOOM_ARC;
+    }
+    [mapView setRegion:region animated:animated];
 }
 
 + (void)zoomMapViewToFitAnnotations:(MKMapView *)mapView animated:(BOOL)animated {
