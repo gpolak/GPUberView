@@ -17,6 +17,7 @@
 #import <UIImageView+WebCache.h>
 #import "GPUberViewCell.h"
 #import <PulsingHaloLayer.h>
+#import <Masonry.h>
 
 @interface GPUberViewController () <UITableViewDataSource, UITableViewDelegate, MKMapViewDelegate>
 
@@ -24,7 +25,6 @@
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *tableHeight;
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
 @property (nonatomic, weak) IBOutlet UIView *loadingView;
-@property (nonatomic, weak) IBOutlet UILabel *errorLabel;
 
 @property (nonatomic) PulsingHaloLayer *pulsingHalo;
 
@@ -92,7 +92,7 @@
     self.pulsingHalo.animationDuration = 1.5;
     self.pulsingHalo.backgroundColor = [UIColor uberBlue].CGColor;
     self.pulsingHalo.radius = 100;
-    self.pulsingHalo.position = self.errorLabel.center;
+    self.pulsingHalo.position = self.loadingView.center;
     [self.loadingView.layer addSublayer:self.pulsingHalo];
 }
 
@@ -166,7 +166,15 @@
             
             self.navigationItem.titleView = [GPUberUtils titleLabelForController:self.navigationController text:@"network error"];
             self.pulsingHalo.hidden = YES;
-            self.errorLabel.hidden = NO;
+            
+            UILabel *label = [GPUberUtils errorLabelWithText:@"We're sorry, but there was a problem contacting Uber."];
+            [self.loadingView addSubview:label];
+            [label mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.centerX.equalTo(self.loadingView.mas_centerX);
+                make.centerY.equalTo(self.loadingView.mas_centerY);
+                make.width.equalTo(@(label.frame.size.width)).priorityHigh();
+                make.height.equalTo(@(label.frame.size.height)).priorityHigh();
+            }];
             
         } else {
             NSArray *times = task.result;

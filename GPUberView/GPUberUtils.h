@@ -12,6 +12,7 @@
 @interface GPUberUtils : NSObject
 
 + (UILabel *)titleLabelForController:(UINavigationController *)controller text:(NSString *)text;
++ (UILabel *)errorLabelWithText:(NSString *)text;
 + (void)openURL:(NSURL *)url;
 + (void)zoomMapViewToFitAnnotations:(MKMapView *)mapView animated:(BOOL)animated;
 

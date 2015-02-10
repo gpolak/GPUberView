@@ -27,6 +27,21 @@
     return label;
 }
 
++ (UILabel *)errorLabelWithText:(NSString *)text {
+    CGRect frame = CGRectMake(0, 0, 200, 50);
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:frame];
+    label.backgroundColor = [UIColor clearColor];
+    label.textColor = [UIColor whiteColor];
+    label.font = [UIFont systemFontOfSize:16];
+    label.text = text;
+    label.numberOfLines = 2;
+    label.textAlignment = NSTextAlignmentCenter;
+    label.lineBreakMode = NSLineBreakByWordWrapping;
+    label.minimumScaleFactor = 0.5;
+    
+    return label;
+}
 
 + (void)openURL:(NSURL *)url {
     if (url) {

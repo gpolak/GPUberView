@@ -22,6 +22,7 @@ PODS:
     - AFNetworking/NSURLSession
   - Bolts (1.1.3)
   - JSONModel (1.0.2)
+  - Masonry (0.6.1)
   - PulsingHalo (0.0.1)
   - SDWebImage (3.7.1):
     - SDWebImage/Core (= 3.7.1)
@@ -31,6 +32,7 @@ DEPENDENCIES:
   - AFNetworking (~> 2.5)
   - Bolts (~> 1.1)
   - JSONModel (~> 1.0)
+  - Masonry (~> 0.6)
   - PulsingHalo
   - SDWebImage (~> 3.6)
 
@@ -38,6 +40,7 @@ SPEC CHECKSUMS:
   AFNetworking: 8bee59492a6ff15d69130efa4d0dc67e0094a52a
   Bolts: 3db0a875235e0c9042b013af13af0f00f79b102c
   JSONModel: cbdef0fdff1cc70e913a860861d3072860efd3a1
+  Masonry: 2cb49fd14d203d2db5ca6bb017135b235dde9980
   PulsingHalo: 4f5fbc25f9efb9f949e4ddad05ca885a11667aa0
   SDWebImage: 116e88633b5b416ea0ca4b334a4ac59cf72dd38d
 
