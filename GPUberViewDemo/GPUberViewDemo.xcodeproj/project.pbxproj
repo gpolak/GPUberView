@@ -15,6 +15,7 @@
 		5EAB980D1A899997002965B0 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5EAB980B1A899997002965B0 /* MainViewController.xib */; };
 		5EAB98121A899A16002965B0 /* GPUberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAB98101A899A16002965B0 /* GPUberViewController.m */; };
 		5EAB98131A899A16002965B0 /* GPUberViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5EAB98111A899A16002965B0 /* GPUberViewController.xib */; };
+		E941B3F7D08F9B605082D7FF /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF39ED48A58773013E635B98 /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,9 @@
 		5EAB980F1A899A16002965B0 /* GPUberViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUberViewController.h; sourceTree = "<group>"; };
 		5EAB98101A899A16002965B0 /* GPUberViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUberViewController.m; sourceTree = "<group>"; };
 		5EAB98111A899A16002965B0 /* GPUberViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GPUberViewController.xib; sourceTree = "<group>"; };
+		644A085E726B097B643533B2 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		F45B8CF572AF8B4E3AF0845E /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		FF39ED48A58773013E635B98 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,18 +42,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E941B3F7D08F9B605082D7FF /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2C9CF78916B8DC830D89282F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FF39ED48A58773013E635B98 /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		5EAB97D71A899944002965B0 = {
 			isa = PBXGroup;
 			children = (
 				5EAB980E1A899A16002965B0 /* GPUberView */,
 				5EAB97E21A899944002965B0 /* GPUberViewDemo */,
 				5EAB97E11A899944002965B0 /* Products */,
+				7415B247A3FF5BF53347A826 /* Pods */,
+				2C9CF78916B8DC830D89282F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -96,6 +111,15 @@
 			path = ../GPUberView;
 			sourceTree = "<group>";
 		};
+		7415B247A3FF5BF53347A826 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				644A085E726B097B643533B2 /* Pods.debug.xcconfig */,
+				F45B8CF572AF8B4E3AF0845E /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -103,9 +127,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5EAB98031A899944002965B0 /* Build configuration list for PBXNativeTarget "GPUberViewDemo" */;
 			buildPhases = (
+				AF1FED63265E9068C86ECAF1 /* Check Pods Manifest.lock */,
 				5EAB97DC1A899944002965B0 /* Sources */,
 				5EAB97DD1A899944002965B0 /* Frameworks */,
 				5EAB97DE1A899944002965B0 /* Resources */,
+				8678231784B3F1E594517C5A /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -161,6 +187,39 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		8678231784B3F1E594517C5A /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AF1FED63265E9068C86ECAF1 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		5EAB97DC1A899944002965B0 /* Sources */ = {
@@ -222,7 +281,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -257,7 +316,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -266,6 +325,7 @@
 		};
 		5EAB98041A899944002965B0 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 644A085E726B097B643533B2 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = GPUberViewDemo/Info.plist;
@@ -276,6 +336,7 @@
 		};
 		5EAB98051A899944002965B0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F45B8CF572AF8B4E3AF0845E /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = GPUberViewDemo/Info.plist;
@@ -303,6 +364,7 @@
 				5EAB98051A899944002965B0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
