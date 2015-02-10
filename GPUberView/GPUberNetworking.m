@@ -11,6 +11,7 @@
 #import <JSONModel.h>
 #import "GPUberPrice.h"
 #import "GPUberProduct.h"
+#import "GPUberTime.h"
 
 @implementation GPUberNetworking
 
@@ -115,6 +116,40 @@
             }
             
             [taskSource setResult:prices];
+        }
+        
+        return nil;
+    }];
+    
+    return taskSource.task;
+}
+
++ (BFTask *)timeEstimatesForStart:(CLLocationCoordinate2D)start serverToken:(NSString *)serverToken {
+    NSString *endpoint = @"v1/estimates/time";
+    
+    BFTaskCompletionSource *taskSource = [BFTaskCompletionSource taskCompletionSource];
+    
+    NSDictionary *params = @{@"start_latitude": [NSNumber numberWithDouble:start.latitude],
+                             @"start_longitude": [NSNumber numberWithDouble:start.longitude]
+                             };
+    
+    [[self GETWithEndpoint:endpoint serverToken:serverToken params:params] continueWithBlock:^id(BFTask *task) {
+        if (task.error) {
+            NSLog(@"%@", task.error);
+            [taskSource setError:task.error];
+        } else {
+            NSMutableArray *times = [NSMutableArray new];
+            NSArray *rawTimes = [task.result objectForKey:@"times"];
+            for (NSDictionary *rawTime in rawTimes) {
+                NSError *error;
+                GPUberTime *time = [[GPUberTime alloc] initWithDictionary:rawTime error:&error];
+                if (error)
+                    NSLog(@"unable to parse time element:%@", error);
+                else
+                    [times addObject:time];
+            }
+            
+            [taskSource setResult:times];
         }
         
         return nil;

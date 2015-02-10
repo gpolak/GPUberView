@@ -13,6 +13,7 @@
 @interface GPUberNetworking : NSObject
 
 + (BFTask *)productsForStart:(CLLocationCoordinate2D)start serverToken:(NSString *)serverToken;
++ (BFTask *)timeEstimatesForStart:(CLLocationCoordinate2D)start serverToken:(NSString *)serverToken;
 + (BFTask *)pricesForStart:(CLLocationCoordinate2D)start end:(CLLocationCoordinate2D)end serverToken:(NSString *)serverToken;
 
 @end

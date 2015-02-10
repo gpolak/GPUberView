@@ -29,9 +29,25 @@
     if (!price || ![price.productId isEqualToString:self.productId])
         return;
     
-    self.estimate = price.estimate;
-    self.duration = price.duration;
+    self.priceEstimate = price.estimate;
+    self.timeEstimate = price.duration;
     self.surgeMultiplier = price.surgeMultiplier;
+}
+
+- (void)parametrizeWithTime:(GPUberTime *)time {
+    if (!time|| ![time.productId isEqualToString:self.productId])
+        return;
+    
+    self.timeEstimate = time.estimate;
+}
+
+- (NSString *)timeEstimateString {
+    NSInteger minutes = fmaxf(self.timeEstimate / 60, 1);
+    
+    if (minutes == 1)
+        return @"1 min";
+    else
+        return [NSString stringWithFormat:@"%ld mins", (long)minutes];
 }
 
 - (BOOL)isEqual:(id)object {

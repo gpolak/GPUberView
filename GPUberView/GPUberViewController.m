@@ -91,7 +91,7 @@
 }
 
 - (void)initData {
-    [[[GPUberNetworking productsForStart:self.startLocation serverToken:self.serverToken] continueWithExecutor:[BFExecutor mainThreadExecutor] withSuccessBlock:^id(BFTask *task) {
+    [[[[GPUberNetworking productsForStart:self.startLocation serverToken:self.serverToken] continueWithExecutor:[BFExecutor mainThreadExecutor] withSuccessBlock:^id(BFTask *task) {
         
         NSArray *products = task.result;
         NSMutableArray *elements = [NSMutableArray arrayWithCapacity:products.count];
@@ -102,14 +102,24 @@
         [self refreshTable];
         
         return [GPUberNetworking pricesForStart:self.startLocation end:self.endLocation serverToken:self.serverToken];
+    }] continueWithExecutor:[BFExecutor mainThreadExecutor] withSuccessBlock:^id(BFTask *task) {
+        NSArray *prices = task.result;
+        for (GPUberPrice *price in prices) {
+            GPUberViewElement *element = [self elementWithProductId:price.productId];
+            [element parametrizeWithPrice:price];
+        }
+        
+        [self refreshTable];
+        
+        return [GPUberNetworking timeEstimatesForStart:self.startLocation serverToken:self.serverToken];
     }] continueWithExecutor:[BFExecutor mainThreadExecutor] withBlock:^id(BFTask *task) {
         if (task.error) {
             NSLog(@"error fetching uber data:%@", task.error);
         } else {
-            NSArray *prices = task.result;
-            for (GPUberPrice *price in prices) {
-                GPUberViewElement *element = [self elementWithProductId:price.productId];
-                [element parametrizeWithPrice:price];
+            NSArray *times = task.result;
+            for (GPUberTime *time in times) {
+                GPUberViewElement *element = [self elementWithProductId:time.productId];
+                [element parametrizeWithTime:time];
             }
             
             [self refreshTable];
@@ -261,12 +271,15 @@
     GPUberViewCell *cell = (GPUberViewCell *)[tableView dequeueReusableCellWithIdentifier:[GPUberViewCell reuseIdentifier]];
     
     GPUberViewElement *element = [self.elements objectAtIndex:indexPath.row];
-    cell.productNameLabel.text = element.displayName;
-    
-    cell.costEstimateLabel.text = element.estimate;
-    cell.costEstimateLabel.textColor = element.surgeMultiplier > 1 ? [UIColor uberBlue] : [UIColor grayColor];
     
     [cell.productImageView sd_setImageWithURL:element.image];
+    
+    cell.productNameLabel.text = element.displayName;
+    
+    cell.timeEstimateLabel.text = [element timeEstimateString];
+    
+    cell.costEstimateLabel.text = element.priceEstimate;
+    cell.costEstimateLabel.textColor = element.surgeMultiplier > 1 ? [UIColor uberBlue] : [UIColor grayColor];
     
     return cell;
 }
