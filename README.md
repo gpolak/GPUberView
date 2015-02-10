@@ -28,7 +28,10 @@ GPUberViewController *uber = [[GPUberViewController alloc] initWithServerToken:@
 3. Navigate to the `MainViewController.m` file in the `GPUberViewDemo` folder.
 4. Supply your own `serverToken` and `clientId` values in the `- (IBAction)callUber` function.
 5. Optionally supply the desired pickup and drop-off values.
-5. Run the app in the Simulator or on the device. **Note:** to launch the Uber app, you must run it on a device with Uber installed. Otherwise the user is forwarded to the Uber mobile website.
+5. Run the app in the Simulator or on the device.
+
+### Note:
+If the phone has the Uber app installed, tapping any of the Uber service buttons will bring it up with the appropriate parameters already set. Otherwise the Uber mobile website will be launched.
 
 
 ## Adding GPUberView to Your Project
