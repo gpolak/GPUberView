@@ -1,5 +1,5 @@
 # GPUberView
-Summon Uber from your app with 2 lines of code.
+Summon Uber from your iOS app with 2 lines of code.
 
 ![GPUberView](gpuberview_screenshot.png)
 
