@@ -31,15 +31,9 @@
     [requestSerializer setValue:[NSString stringWithFormat:@"Token %@", serverToken] forHTTPHeaderField:@"Authorization"];
     manager.requestSerializer = requestSerializer;
     
-    // TODO: remove
-    NSLog(@"[GET] %@ -> %@", endpoint, params);
-    
     NSURL *url = [self urlWithEndpoint:endpoint];
     
-    [manager GET:[url absoluteString] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        // TODO: remove
-        NSLog(@"[GET] %@ <- %@", endpoint, responseObject);
-        
+    [manager GET:[url absoluteString] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {        
         if ([responseObject isKindOfClass:[NSDictionary class]] || [responseObject isKindOfClass:[NSArray class]]) {
             [taskSource setResult:responseObject];
         } else {
