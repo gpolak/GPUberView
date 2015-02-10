@@ -81,6 +81,14 @@
     
     [self.tableView registerNib:[UINib nibWithNibName:@"GPUberViewCell" bundle:nil] forCellReuseIdentifier:[GPUberViewCell reuseIdentifier]];
     
+    self.pulsingHalo = [PulsingHaloLayer layer];
+    self.pulsingHalo.animationDuration = 1.5;
+    self.pulsingHalo.backgroundColor = [UIColor uberBlue].CGColor;
+    self.pulsingHalo.radius = 100;
+    self.pulsingHalo.position = self.loadingView.center;
+    [self.loadingView.layer addSublayer:self.pulsingHalo];
+    self.pulsingHalo.hidden = YES;
+    
     [self refreshTable];
     [self initMap];
     [self initData];
@@ -93,12 +101,9 @@
     self.previousWindowColor = application.keyWindow.backgroundColor;
     application.keyWindow.backgroundColor = [UIColor whiteColor];
     
-    self.pulsingHalo = [PulsingHaloLayer layer];
-    self.pulsingHalo.animationDuration = 1.5;
-    self.pulsingHalo.backgroundColor = [UIColor uberBlue].CGColor;
-    self.pulsingHalo.radius = 100;
+    // recenter after view has loaded (and shifted)
     self.pulsingHalo.position = self.loadingView.center;
-    [self.loadingView.layer addSublayer:self.pulsingHalo];
+    self.pulsingHalo.hidden = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
