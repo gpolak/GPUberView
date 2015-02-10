@@ -263,7 +263,6 @@
             MKRoute *route = [response.routes firstObject];
             [self.mapView addOverlay:route.polyline level:MKOverlayLevelAboveRoads];
         }
-        
     }];
 }
 
@@ -277,9 +276,12 @@
 #pragma mark - Table
 
 - (void)refreshTable {
-    self.tableView.rowHeight = 44;    
+    self.tableView.rowHeight = 44;
     self.tableHeight.constant = self.tableView.rowHeight * self.elements.count;
     [self.tableView reloadData];
+    
+    // need to adjust zoom since map view rect has changed
+    [GPUberUtils zoomMapViewToFitAnnotations:self.mapView animated:YES];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
