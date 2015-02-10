@@ -20,11 +20,8 @@
 }
 
 - (IBAction)callUber {
-    NSString *serverToken = @"P_DXM1dCDDq_f17lvgk57FBPWmc8vCD6Bwid2ULp";
+    NSString *serverToken = @"your_server_token";
     NSString *clientId = @"your_client_id";
-    
-//    CLLocationCoordinate2D start = CLLocationCoordinate2DMake(40.7471787,-73.997494);
-//    CLLocationCoordinate2D end = CLLocationCoordinate2DMake(40.712774,-74.006059);
     
     CLLocationCoordinate2D start = CLLocationCoordinate2DMake(42.352311,-71.055304);
     CLLocationCoordinate2D end = CLLocationCoordinate2DMake(42.346676,-71.097218);
