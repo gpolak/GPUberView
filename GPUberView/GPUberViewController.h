@@ -24,10 +24,10 @@
 @property (nonatomic) NSString *mobilePhone;
 @property (nonatomic) NSString *zipcode;
 
-- (id)initWithServerKey:(NSString *)key
-               clientId:(NSString *)clientId
-                  start:(CLLocationCoordinate2D)start
-                    end:(CLLocationCoordinate2D)end;
+- (id)initWithServerToken:(NSString *)serverToken
+                 clientId:(NSString *)clientId
+                    start:(CLLocationCoordinate2D)start
+                      end:(CLLocationCoordinate2D)end;
 
 - (void)showInViewController:(UIViewController *)viewController;
 

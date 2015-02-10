@@ -26,10 +26,10 @@
     CLLocationCoordinate2D start = CLLocationCoordinate2DMake(40.7471787,-73.997494);
     CLLocationCoordinate2D end = CLLocationCoordinate2DMake(40.712774,-74.006059);
     
-    GPUberViewController *uber = [[GPUberViewController alloc] initWithServerKey:serverToken
-                                                                        clientId:clientId
-                                                                           start:start
-                                                                             end:end];
+    GPUberViewController *uber = [[GPUberViewController alloc] initWithServerToken:serverToken
+                                                                          clientId:clientId
+                                                                             start:start
+                                                                               end:end];
     [uber showInViewController:self];
 }
 

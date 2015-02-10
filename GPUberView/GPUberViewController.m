@@ -42,7 +42,7 @@
 
 @implementation GPUberViewController
 
-- (id)initWithServerKey:(NSString *)key
+- (id)initWithServerToken:(NSString *)serverToken
                clientId:(NSString *)clientId
                   start:(CLLocationCoordinate2D)start
                     end:(CLLocationCoordinate2D)end {
@@ -50,7 +50,7 @@
     
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
-        self.serverToken = key;
+        self.serverToken = serverToken;
         self.clientId = clientId;
         self.startLocation = start;
         self.endLocation = end;
