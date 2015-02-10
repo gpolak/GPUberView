@@ -29,4 +29,6 @@
                   start:(CLLocationCoordinate2D)start
                     end:(CLLocationCoordinate2D)end;
 
+- (void)showInViewController:(UIViewController *)viewController;
+
 @end

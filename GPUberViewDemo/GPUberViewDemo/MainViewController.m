@@ -18,7 +18,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self performSelector: @selector(callUber) withObject:self afterDelay: 0.0];
+//    [self performSelector: @selector(callUber) withObject:self afterDelay: 0.0];
 }
 
 - (IBAction)callUber {
@@ -28,9 +28,8 @@
     CLLocationCoordinate2D start = CLLocationCoordinate2DMake(42.384373, -71.077672);
     CLLocationCoordinate2D end = CLLocationCoordinate2DMake(42.365613, -71.00956);
     
-    GPUberViewController *vc = [[GPUberViewController alloc] initWithServerKey:serverToken clientId:clientId start:start end:end];
-    UINavigationController *nVc = [[UINavigationController alloc] initWithRootViewController:vc];
-    [self presentViewController:nVc animated:YES completion:nil];
+    GPUberViewController *uber = [[GPUberViewController alloc] initWithServerKey:serverToken clientId:clientId start:start end:end];
+    [uber showInViewController:self];
 }
 
 @end

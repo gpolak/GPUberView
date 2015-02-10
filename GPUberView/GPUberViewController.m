@@ -59,6 +59,11 @@
     return self;
 }
 
+- (void)showInViewController:(UIViewController *)viewController {
+    UINavigationController *nVc = [[UINavigationController alloc] initWithRootViewController:self];
+    [viewController presentViewController:nVc animated:YES completion:nil];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -139,13 +144,13 @@
         
         [self refreshTable];
         
-        [UIView animateWithDuration:1.0 animations:^{
+        [UIView animateWithDuration:0.5 animations:^{
             self.loadingView.alpha = 0;
         } completion:^(BOOL finished) {
             [self.loadingView removeFromSuperview];
         }];
         
-        [UIView animateWithDuration:0.3 animations:^{
+        [UIView animateWithDuration:0.2 animations:^{
             self.navigationItem.titleView.alpha = 0;
         } completion:^(BOOL finished) {
             UIImage *logo = [UIImage imageNamed:@"uber_logo_15"];
@@ -154,7 +159,7 @@
             self.navigationItem.titleView = imageView;
             self.navigationItem.titleView.alpha = 0;
             
-            [UIView animateWithDuration:0.7 animations:^{
+            [UIView animateWithDuration:0.3 animations:^{
                 self.navigationItem.titleView.alpha = 1.0;
             }];
         }];
