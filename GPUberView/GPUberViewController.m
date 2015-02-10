@@ -279,6 +279,28 @@
     return renderer;
 }
 
+- (MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>) annotation {
+    static NSString *startPin = @"startPin";
+    static NSString *endPin = @"endPin";
+    
+    MKPinAnnotationView *annotationView = nil;
+    if ([GPUberUtils isCoordinate:annotation.coordinate equalToCoordinate:self.startLocation]) {
+        annotationView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:startPin];
+        if (!annotationView) {
+            annotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:startPin];
+            annotationView.pinColor = MKPinAnnotationColorGreen;
+        }
+    } else {
+        annotationView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:endPin];
+        if (!annotationView) {
+            annotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:endPin];
+            annotationView.pinColor = MKPinAnnotationColorRed;
+        }
+    }
+    
+    return annotationView;
+}
+
 #pragma mark - Table
 
 - (void)refreshTable {
