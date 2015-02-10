@@ -14,6 +14,20 @@
 
 @implementation GPUberUtils
 
++ (UILabel *)titleLabelForController:(UINavigationController *)controller text:(NSString *)text {
+    CGRect frame = CGRectMake(0, 0, 150, controller.navigationBar.frame.size.height);
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:frame];
+    label.backgroundColor = [UIColor clearColor];
+    label.textColor = [UIColor blackColor];
+    label.font = [UIFont systemFontOfSize:16];
+    label.text = text;
+    label.textAlignment = NSTextAlignmentCenter;
+
+    return label;
+}
+
+
 + (void)openURL:(NSURL *)url {
     if (url) {
         // use Chrome browser if installed

@@ -56,7 +56,7 @@
 }
 
 + (BFTask *)productsForStart:(CLLocationCoordinate2D)start serverToken:(NSString *)serverToken {
-    NSString *endpoint = @"v1/products";
+    NSString *endpoint = @"v1/productss";
     
     BFTaskCompletionSource *taskSource = [BFTaskCompletionSource taskCompletionSource];
     

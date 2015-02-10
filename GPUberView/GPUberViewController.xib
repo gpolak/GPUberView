@@ -7,6 +7,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="GPUberViewController">
             <connections>
+                <outlet property="errorLabel" destination="dhd-Ls-mhb" id="8s8-IB-lH1"/>
+                <outlet property="loadingView" destination="HJV-q1-z2s" id="bZ8-6x-fka"/>
                 <outlet property="mapView" destination="kO6-QQ-O5I" id="Tf7-Lf-tmQ"/>
                 <outlet property="tableHeight" destination="gKK-oS-6bM" id="cCF-mS-Xne"/>
                 <outlet property="tableView" destination="gMa-Qy-bRm" id="Yg2-MD-gIJ"/>
@@ -35,13 +37,37 @@
                         <outlet property="delegate" destination="-1" id="gDb-FK-wg0"/>
                     </connections>
                 </mapView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HJV-q1-z2s">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                    <subviews>
+                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="We're sorry but there was a problem contacting Uber." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dhd-Ls-mhb">
+                            <rect key="frame" x="40" y="260" width="240" height="48"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="48" id="6Gf-N3-6aY"/>
+                                <constraint firstAttribute="width" constant="240" id="k7Z-nD-yiR"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="centerX" secondItem="dhd-Ls-mhb" secondAttribute="centerX" id="Qfn-k6-dbe"/>
+                        <constraint firstAttribute="centerY" secondItem="dhd-Ls-mhb" secondAttribute="centerY" id="jP4-JU-bK2"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="gMa-Qy-bRm" firstAttribute="top" secondItem="kO6-QQ-O5I" secondAttribute="bottom" constant="4" id="52A-YE-LvA"/>
+                <constraint firstItem="HJV-q1-z2s" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="ECN-MQ-axY"/>
                 <constraint firstAttribute="bottom" secondItem="gMa-Qy-bRm" secondAttribute="bottom" constant="4" id="FPh-wk-8Xf"/>
                 <constraint firstItem="kO6-QQ-O5I" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="J6J-H7-hB5"/>
                 <constraint firstItem="gMa-Qy-bRm" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="L3v-ZU-xwm"/>
+                <constraint firstItem="HJV-q1-z2s" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Mj8-kH-xY0"/>
+                <constraint firstAttribute="trailing" secondItem="HJV-q1-z2s" secondAttribute="trailing" id="apv-T5-LBa"/>
+                <constraint firstAttribute="bottom" secondItem="HJV-q1-z2s" secondAttribute="bottom" id="ecV-Ly-32O"/>
                 <constraint firstAttribute="trailing" secondItem="kO6-QQ-O5I" secondAttribute="trailing" id="gW9-UB-X2k"/>
                 <constraint firstItem="kO6-QQ-O5I" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="nX9-TP-BRo"/>
                 <constraint firstAttribute="trailing" secondItem="gMa-Qy-bRm" secondAttribute="trailing" id="uPQ-Uw-6xa"/>

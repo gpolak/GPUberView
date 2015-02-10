@@ -16,12 +16,17 @@
 #import "UIColor+GPUberView.h"
 #import <UIImageView+WebCache.h>
 #import "GPUberViewCell.h"
+#import <PulsingHaloLayer.h>
 
 @interface GPUberViewController () <UITableViewDataSource, UITableViewDelegate, MKMapViewDelegate>
 
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *tableHeight;
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
+@property (nonatomic, weak) IBOutlet UIView *loadingView;
+@property (nonatomic, weak) IBOutlet UILabel *errorLabel;
+
+@property (nonatomic) PulsingHaloLayer *pulsingHalo;
 
 @property (nonatomic) NSString *serverToken;
 @property (nonatomic) NSString *clientId;
@@ -62,11 +67,8 @@
                                                                                   action:@selector(cancelView)];
     cancelButton.tintColor = [UIColor blackColor];
     self.navigationItem.rightBarButtonItem = cancelButton;
-    
-    UIImage *logo = [UIImage imageNamed:@"uber_logo_15"];
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:logo];
-    imageView.contentMode = UIViewContentModeCenter;
-    self.navigationItem.titleView = imageView;
+   
+    self.navigationItem.titleView = [GPUberUtils titleLabelForController:self.navigationController text:@"finding drivers..."];
     
     self.view.backgroundColor = [UIColor uberLightGray];
     
@@ -77,9 +79,35 @@
     [self refreshTable];
     [self initMap];
     [self initData];
-    
-//    [self launchUberWithProductId:@"6f72dfc5-27f1-42e8-84db-ccc7a75f6969" clientId:@"70zxopERw9Nx2OeQU8yrUYSpW69N-RVh"];
 }
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    UIApplication *application = [UIApplication sharedApplication];
+    self.previousWindowColor = application.keyWindow.backgroundColor;
+    application.keyWindow.backgroundColor = [UIColor whiteColor];
+    
+    self.pulsingHalo = [PulsingHaloLayer layer];
+    self.pulsingHalo.animationDuration = 1.5;
+    self.pulsingHalo.backgroundColor = [UIColor uberBlue].CGColor;
+    self.pulsingHalo.radius = 100;
+    self.pulsingHalo.position = self.errorLabel.center;
+    [self.loadingView.layer addSublayer:self.pulsingHalo];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    // restore previous UI values
+    UIApplication *application = [UIApplication sharedApplication];
+    application.keyWindow.backgroundColor = self.previousWindowColor;
+}
+
+- (IBAction)cancelView {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 
 - (GPUberViewElement *)elementWithProductId:(NSString *)productId {
     if (!productId)
@@ -111,10 +139,35 @@
         
         [self refreshTable];
         
+        [UIView animateWithDuration:1.0 animations:^{
+            self.loadingView.alpha = 0;
+        } completion:^(BOOL finished) {
+            [self.loadingView removeFromSuperview];
+        }];
+        
+        [UIView animateWithDuration:0.3 animations:^{
+            self.navigationItem.titleView.alpha = 0;
+        } completion:^(BOOL finished) {
+            UIImage *logo = [UIImage imageNamed:@"uber_logo_15"];
+            UIImageView *imageView = [[UIImageView alloc] initWithImage:logo];
+            imageView.contentMode = UIViewContentModeCenter;
+            self.navigationItem.titleView = imageView;
+            self.navigationItem.titleView.alpha = 0;
+            
+            [UIView animateWithDuration:0.7 animations:^{
+                self.navigationItem.titleView.alpha = 1.0;
+            }];
+        }];
+        
         return [GPUberNetworking timeEstimatesForStart:self.startLocation serverToken:self.serverToken];
     }] continueWithExecutor:[BFExecutor mainThreadExecutor] withBlock:^id(BFTask *task) {
         if (task.error) {
             NSLog(@"error fetching uber data:%@", task.error);
+            
+            self.navigationItem.titleView = [GPUberUtils titleLabelForController:self.navigationController text:@"network error"];
+            self.pulsingHalo.hidden = YES;
+            self.errorLabel.hidden = NO;
+            
         } else {
             NSArray *times = task.result;
             for (GPUberTime *time in times) {
@@ -204,26 +257,6 @@
     renderer.strokeColor = [UIColor uberBlue];
     renderer.lineWidth = 5.0;
     return renderer;
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-    UIApplication *application = [UIApplication sharedApplication];
-    self.previousWindowColor = application.keyWindow.backgroundColor;
-    application.keyWindow.backgroundColor = [UIColor whiteColor];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    
-    // restore previous UI values
-    UIApplication *application = [UIApplication sharedApplication];
-    application.keyWindow.backgroundColor = self.previousWindowColor;
-}
-
-- (IBAction)cancelView {
-    [self dismissViewControllerAnimated:YES completion:nil];    
 }
 
 #pragma mark - Table

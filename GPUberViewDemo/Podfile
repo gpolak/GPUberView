@@ -6,3 +6,4 @@ pod 'AFNetworking', '~> 2.5'
 pod 'JSONModel', "~> 1.0"
 pod 'Bolts', "~> 1.1"
 pod 'SDWebImage', '~>3.6'
+pod "PulsingHalo"
