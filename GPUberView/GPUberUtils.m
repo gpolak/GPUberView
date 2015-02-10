@@ -9,7 +9,6 @@
 #import "GPUberUtils.h"
 
 #define MINIMUM_ZOOM_ARC 0.014 //approximately 1 miles (1 degree of arc ~= 69 miles)
-#define ANNOTATION_REGION_PAD_FACTOR 1.5
 #define MAX_DEGREES_ARC 360
 
 @implementation GPUberUtils
@@ -69,27 +68,30 @@
     }
 }
 
++ (void)zoomMapView:(MKMapView *)mapView toRoute:(MKRoute *)route animated:(BOOL)animated {
+    
+}
+
 + (void)zoomMapViewToFitAnnotations:(MKMapView *)mapView animated:(BOOL)animated {
     NSArray *annotations = mapView.annotations;
     NSInteger count = [mapView.annotations count];
-    if ( count == 0) { return; } //bail if no annotations
     
-    //convert NSArray of id <MKAnnotation> into an MKCoordinateRegion that can be used to set the map size
-    //can't use NSArray with MKMapPoint because MKMapPoint is not an id
+    if (count == 0)
+        return;
+    
+    
     MKMapPoint points[count]; //C array of MKMapPoint struct
-    for( int i=0; i<count; i++ ) //load points C array by converting coordinates to points
-    {
+    for( int i=0; i<count; i++ ) {
         CLLocationCoordinate2D coordinate = [(id <MKAnnotation>)[annotations objectAtIndex:i] coordinate];
         points[i] = MKMapPointForCoordinate(coordinate);
     }
-    //create MKMapRect from array of MKMapPoint
+
+    // add padding
     MKMapRect mapRect = [[MKPolygon polygonWithPoints:points count:count] boundingMapRect];
-    //convert MKCoordinateRegion from MKMapRect
+    UIEdgeInsets insets = UIEdgeInsetsMake(50, 20, 30, 20);
+    mapRect = [mapView mapRectThatFits:mapRect edgePadding:insets];
     MKCoordinateRegion region = MKCoordinateRegionForMapRect(mapRect);
     
-    //add padding so pins aren't scrunched on the edges
-    region.span.latitudeDelta  *= ANNOTATION_REGION_PAD_FACTOR;
-    region.span.longitudeDelta *= ANNOTATION_REGION_PAD_FACTOR;
     //but padding can't be bigger than the world
     if( region.span.latitudeDelta > MAX_DEGREES_ARC ) { region.span.latitudeDelta  = MAX_DEGREES_ARC; }
     if( region.span.longitudeDelta > MAX_DEGREES_ARC ){ region.span.longitudeDelta = MAX_DEGREES_ARC; }
