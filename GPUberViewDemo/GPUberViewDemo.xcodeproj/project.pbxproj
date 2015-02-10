@@ -1,0 +1,310 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5EAB97E61A899944002965B0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAB97E51A899944002965B0 /* main.m */; };
+		5EAB97E91A899944002965B0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAB97E81A899944002965B0 /* AppDelegate.m */; };
+		5EAB97F11A899944002965B0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EAB97F01A899944002965B0 /* Images.xcassets */; };
+		5EAB97F41A899944002965B0 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5EAB97F21A899944002965B0 /* LaunchScreen.xib */; };
+		5EAB980C1A899997002965B0 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAB980A1A899997002965B0 /* MainViewController.m */; };
+		5EAB980D1A899997002965B0 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5EAB980B1A899997002965B0 /* MainViewController.xib */; };
+		5EAB98121A899A16002965B0 /* GPUberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAB98101A899A16002965B0 /* GPUberViewController.m */; };
+		5EAB98131A899A16002965B0 /* GPUberViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5EAB98111A899A16002965B0 /* GPUberViewController.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5EAB97E01A899944002965B0 /* GPUberViewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GPUberViewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5EAB97E41A899944002965B0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5EAB97E51A899944002965B0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		5EAB97E71A899944002965B0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		5EAB97E81A899944002965B0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		5EAB97F01A899944002965B0 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		5EAB97F31A899944002965B0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		5EAB98091A899997002965B0 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		5EAB980A1A899997002965B0 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		5EAB980B1A899997002965B0 /* MainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainViewController.xib; sourceTree = "<group>"; };
+		5EAB980F1A899A16002965B0 /* GPUberViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUberViewController.h; sourceTree = "<group>"; };
+		5EAB98101A899A16002965B0 /* GPUberViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUberViewController.m; sourceTree = "<group>"; };
+		5EAB98111A899A16002965B0 /* GPUberViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GPUberViewController.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5EAB97DD1A899944002965B0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5EAB97D71A899944002965B0 = {
+			isa = PBXGroup;
+			children = (
+				5EAB980E1A899A16002965B0 /* GPUberView */,
+				5EAB97E21A899944002965B0 /* GPUberViewDemo */,
+				5EAB97E11A899944002965B0 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5EAB97E11A899944002965B0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5EAB97E01A899944002965B0 /* GPUberViewDemo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5EAB97E21A899944002965B0 /* GPUberViewDemo */ = {
+			isa = PBXGroup;
+			children = (
+				5EAB97E71A899944002965B0 /* AppDelegate.h */,
+				5EAB97E81A899944002965B0 /* AppDelegate.m */,
+				5EAB98091A899997002965B0 /* MainViewController.h */,
+				5EAB980A1A899997002965B0 /* MainViewController.m */,
+				5EAB980B1A899997002965B0 /* MainViewController.xib */,
+				5EAB97F01A899944002965B0 /* Images.xcassets */,
+				5EAB97F21A899944002965B0 /* LaunchScreen.xib */,
+				5EAB97E31A899944002965B0 /* Supporting Files */,
+			);
+			path = GPUberViewDemo;
+			sourceTree = "<group>";
+		};
+		5EAB97E31A899944002965B0 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5EAB97E41A899944002965B0 /* Info.plist */,
+				5EAB97E51A899944002965B0 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		5EAB980E1A899A16002965B0 /* GPUberView */ = {
+			isa = PBXGroup;
+			children = (
+				5EAB980F1A899A16002965B0 /* GPUberViewController.h */,
+				5EAB98101A899A16002965B0 /* GPUberViewController.m */,
+				5EAB98111A899A16002965B0 /* GPUberViewController.xib */,
+			);
+			name = GPUberView;
+			path = ../GPUberView;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5EAB97DF1A899944002965B0 /* GPUberViewDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5EAB98031A899944002965B0 /* Build configuration list for PBXNativeTarget "GPUberViewDemo" */;
+			buildPhases = (
+				5EAB97DC1A899944002965B0 /* Sources */,
+				5EAB97DD1A899944002965B0 /* Frameworks */,
+				5EAB97DE1A899944002965B0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GPUberViewDemo;
+			productName = GPUberViewDemo;
+			productReference = 5EAB97E01A899944002965B0 /* GPUberViewDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5EAB97D81A899944002965B0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = "George Polak";
+				TargetAttributes = {
+					5EAB97DF1A899944002965B0 = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+				};
+			};
+			buildConfigurationList = 5EAB97DB1A899944002965B0 /* Build configuration list for PBXProject "GPUberViewDemo" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5EAB97D71A899944002965B0;
+			productRefGroup = 5EAB97E11A899944002965B0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5EAB97DF1A899944002965B0 /* GPUberViewDemo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5EAB97DE1A899944002965B0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5EAB98131A899A16002965B0 /* GPUberViewController.xib in Resources */,
+				5EAB97F41A899944002965B0 /* LaunchScreen.xib in Resources */,
+				5EAB980D1A899997002965B0 /* MainViewController.xib in Resources */,
+				5EAB97F11A899944002965B0 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5EAB97DC1A899944002965B0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5EAB98121A899A16002965B0 /* GPUberViewController.m in Sources */,
+				5EAB97E91A899944002965B0 /* AppDelegate.m in Sources */,
+				5EAB980C1A899997002965B0 /* MainViewController.m in Sources */,
+				5EAB97E61A899944002965B0 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		5EAB97F21A899944002965B0 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5EAB97F31A899944002965B0 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		5EAB98011A899944002965B0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		5EAB98021A899944002965B0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		5EAB98041A899944002965B0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = GPUberViewDemo/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		5EAB98051A899944002965B0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = GPUberViewDemo/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5EAB97DB1A899944002965B0 /* Build configuration list for PBXProject "GPUberViewDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5EAB98011A899944002965B0 /* Debug */,
+				5EAB98021A899944002965B0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5EAB98031A899944002965B0 /* Build configuration list for PBXNativeTarget "GPUberViewDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5EAB98041A899944002965B0 /* Debug */,
+				5EAB98051A899944002965B0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5EAB97D81A899944002965B0 /* Project object */;
+}
