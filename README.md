@@ -67,6 +67,20 @@ GPUberViewController *uber = [[GPUberViewController alloc] initWithServerKey:@"y
                                                                          end:dropoff];
 ```
 
+### (Optional) Add User Signup Parameters
+
+Adding these parameters will make the new user sign-up process smoother in case the user does not have the Uber app installed.
+
+```
+uber.firstName = @"John";
+uber.lastName = @"Doe";
+uber.email = @"john@example.com";
+uber.countryCode = @"US";
+uber.mobileCountryCode = @"1";
+uber.mobilePhone = @"2125554444";
+uber.zipcode = @"10001";
+```
+
 ### Show GPUberView
 
 ```
