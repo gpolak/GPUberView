@@ -20,16 +20,18 @@
 }
 
 - (IBAction)callUber {
-    NSString *serverToken = @"your_server_token";
-    NSString *clientId = @"your_client_id";
+    /* I left a test server token here for the convenience of this demo app.
+     * Please use your own credentials in your own production app.
+     */
+    NSString *serverToken = @"P_DXM1dCDDq_f17lvgk57FBPWmc8vCD6Bwid2ULp";
     
-    CLLocationCoordinate2D start = CLLocationCoordinate2DMake(42.352311,-71.055304);
-    CLLocationCoordinate2D end = CLLocationCoordinate2DMake(42.346676,-71.097218);
+    CLLocationCoordinate2D pickup = CLLocationCoordinate2DMake(42.352311,-71.055304);
+    CLLocationCoordinate2D dropoff = CLLocationCoordinate2DMake(42.346676,-71.097218);
     
     GPUberViewController *uber = [[GPUberViewController alloc] initWithServerToken:serverToken
-                                                                          clientId:clientId
-                                                                             start:start
-                                                                               end:end];
+                                                                          clientId:nil
+                                                                             start:pickup
+                                                                               end:dropoff];
     [uber showInViewController:self];
 }
 

@@ -15,7 +15,7 @@ CLLocationCoordinate2D pickup = CLLocationCoordinate2DMake(40.7471787,-73.997494
 CLLocationCoordinate2D dropoff = CLLocationCoordinate2DMake(40.712774,-74.006059);
     
 GPUberViewController *uber = [[GPUberViewController alloc] initWithServerToken:@"your_server_token"
-                                                                      clientId:@"your_client_id"
+                                                                      clientId:nil
                                                                          start:pickup
                                                                            end:dropoff];
 [uber showInViewController:self];
@@ -24,11 +24,8 @@ GPUberViewController *uber = [[GPUberViewController alloc] initWithServerToken:@
 ## Demo
 
 1. Go to the GPUberViewDemo directory.
-2. Open the `.xcworkspace` (**not the `.xcodeproj`!**) file.
-3. Navigate to the `MainViewController.m` file in the `GPUberViewDemo` folder.
-4. Supply your own `serverToken` and `clientId` values in the `- (IBAction)callUber` function.
-5. Optionally supply the desired pickup and drop-off values.
-5. Run the app in the Simulator or on the device.
+2. Open the `.xcworkspace` (not the `.xcodeproj`) file.
+3. Run the app in the Simulator or on the device.
 
 ### Note:
 If the phone has the Uber app installed, tapping any of the Uber service buttons will bring it up with the appropriate parameters already set. Otherwise the Uber mobile website will be launched.
@@ -58,9 +55,9 @@ To use this library you need a valid *Server Token* and *Client Id* from Uber. Y
 
 ### Initialize the GPUberViewController
 
-- determine the *pickup* and *dropoff* `CLLocationCoordinate2D` values
-- get your Uber *server token* for authentication
-- get your Uber *client id* for new user signup credits
+- pass in the desired *pickup* and *dropoff* `CLLocationCoordinate2D` values
+- pass in your Uber *server token* for authentication
+- **optional:** pass in your Uber *client id* to get credits for new user signups
 
 
 ```objective-c
@@ -68,7 +65,7 @@ CLLocationCoordinate2D pickup = CLLocationCoordinate2DMake(40.7471787,-73.997494
 CLLocationCoordinate2D dropoff = CLLocationCoordinate2DMake(40.712774,-74.006059);
     
 GPUberViewController *uber = [[GPUberViewController alloc] initWithServerToken:@"your_server_token"
-                                                                      clientId:@"your_client_id"
+                                                                      clientId:nil
                                                                          start:pickup
                                                                            end:dropoff];
 ```

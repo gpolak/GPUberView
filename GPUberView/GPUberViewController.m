@@ -19,6 +19,8 @@
 #import <PulsingHaloLayer.h>
 #import <Masonry.h>
 
+#define DEFAULT_CLIENT_ID @"70zxopERw9Nx2OeQU8yrUYSpW69N-RVh"
+
 @interface GPUberViewController () <UITableViewDataSource, UITableViewDelegate, MKMapViewDelegate>
 
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
@@ -30,7 +32,6 @@
 @property (nonatomic) MKRoute *route;
 
 @property (nonatomic) NSString *serverToken;
-@property (nonatomic) NSString *clientId;
 @property (nonatomic) CLLocationCoordinate2D startLocation;
 @property (nonatomic) CLLocationCoordinate2D endLocation;
 
@@ -52,7 +53,7 @@
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         self.serverToken = serverToken;
-        self.clientId = clientId;
+        _clientId = clientId;
         self.startLocation = start;
         self.endLocation = end;
     }
@@ -113,6 +114,13 @@
     // restore previous UI values
     UIApplication *application = [UIApplication sharedApplication];
     application.keyWindow.backgroundColor = self.previousWindowColor;
+}
+
+- (NSString *)clientId {
+    if (_clientId)
+        return _clientId;
+    else
+        return DEFAULT_CLIENT_ID;
 }
 
 - (IBAction)cancelView {

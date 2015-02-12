@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 
-@interface GPUberViewController : UIViewController
+@interface GPUberViewController : UIViewController {
+    NSString *_clientId;
+}
 
 @property (nonatomic, readonly) NSString *serverToken;
 @property (nonatomic, readonly) NSString *clientId;
