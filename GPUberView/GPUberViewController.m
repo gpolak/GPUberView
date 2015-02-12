@@ -102,7 +102,7 @@
     self.pulsingHalo = [PulsingHaloLayer layer];
     self.pulsingHalo.animationDuration = 1.5;
     self.pulsingHalo.backgroundColor = [UIColor uberBlue].CGColor;
-    self.pulsingHalo.radius = 100;
+    self.pulsingHalo.radius = 75;
     self.pulsingHalo.position = self.loadingView.center;
     [self.loadingView.layer addSublayer:self.pulsingHalo];
     self.pulsingHalo.hidden = YES;
