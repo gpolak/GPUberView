@@ -45,7 +45,7 @@ pod "GPUberView"
 
 ### Register You App With Uber
 
-To use this library you need a valid *Server Token* and *Client Id* from Uber. You can get both here: https://developer.uber.com
+To use this library you need a valid *Server Token* from Uber. You can get both here: https://developer.uber.com
 
 ### Import GPUberView
 
