@@ -20,7 +20,8 @@
 }
 
 - (IBAction)callUber {
-    /* I left a test server token here for the convenience of this demo app.
+    /*
+     * I left a test server token here for the convenience of this demo app.
      * Please use your own credentials in your own production app.
      */
     NSString *serverToken = @"P_DXM1dCDDq_f17lvgk57FBPWmc8vCD6Bwid2ULp";
