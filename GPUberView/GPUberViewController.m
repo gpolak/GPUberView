@@ -280,17 +280,8 @@
     }
 }
 
+
 #pragma mark - Map
-
-- (BFTask *)computeRouteZoom {
-    BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-
-    });
-    
-    return source.task;
-}
 
 - (BFTask *)setupMap {
     BFTaskCompletionSource *taskSource = [BFTaskCompletionSource taskCompletionSource];
