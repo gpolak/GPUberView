@@ -242,6 +242,8 @@
 }
 
 - (void)launchUberWithProductId:(NSString *)productId clientId:(NSString *)clientId {
+    NSString *urlString = nil;
+    
     if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"uber://"]]) {
         // launch Uber app
         NSDictionary *params = @{@"product_id": productId,
@@ -252,9 +254,7 @@
                                  @"dropoff[longitude]": [NSNumber numberWithDouble:self.endLocation.longitude],
                                  };
 
-        NSString *urlString = [NSString stringWithFormat:@"uber://?action=setPickup&%@", [params urlEncodedString]];
-
-        [GPUberUtils openURL:[NSURL URLWithString:urlString]];
+        urlString = [NSString stringWithFormat:@"uber://?action=setPickup&%@", [params urlEncodedString]];
     } else {
         // launch mobile site
         NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
@@ -274,10 +274,11 @@
         if (self.mobilePhone) [params setObject:self.mobilePhone forKey:@"mobile_phone"];
         if (self.zipcode) [params setObject:self.zipcode forKey:@"zipcode"];
         
-        NSString *urlString = [NSString stringWithFormat:@"https://m.uber.com/sign-up?%@", [params urlEncodedString]];
-        
-        [GPUberUtils openURL:[NSURL URLWithString:urlString]];
+        urlString = [NSString stringWithFormat:@"https://m.uber.com/sign-up?%@", [params urlEncodedString]];
     }
+    
+    NSLog(@"[GPUberView] launching Uber with: %@", urlString);
+    [GPUberUtils openURL:[NSURL URLWithString:urlString]];
 }
 
 
