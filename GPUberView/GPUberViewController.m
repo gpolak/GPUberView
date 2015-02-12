@@ -45,9 +45,8 @@
 @implementation GPUberViewController
 
 - (id)initWithServerToken:(NSString *)serverToken
-               clientId:(NSString *)clientId
-                  start:(CLLocationCoordinate2D)start
-                    end:(CLLocationCoordinate2D)end {
+                    start:(CLLocationCoordinate2D)start
+                      end:(CLLocationCoordinate2D)end {
     
     if (serverToken.length == 0)
         [NSException raise:NSInvalidArgumentException format:@"invalid server token:%@", serverToken];
@@ -60,12 +59,22 @@
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         self.serverToken = serverToken;
-        _clientId = clientId;
         self.startLocation = start;
         self.endLocation = end;
     }
     
     return self;
+}
+
+- (id)initWithServerToken:(NSString *)serverToken
+               clientId:(NSString *)clientId
+                  start:(CLLocationCoordinate2D)start
+                    end:(CLLocationCoordinate2D)end {
+    
+    GPUberViewController *instance = [self initWithServerToken:serverToken start:start end:end];
+    instance.clientId = clientId;
+    
+    return instance;
 }
 
 - (void)showInViewController:(UIViewController *)viewController {
@@ -166,6 +175,10 @@
     application.keyWindow.backgroundColor = self.previousWindowColor;
 }
 
+- (void)setClientId:(NSString *)clientId {
+    _clientId = clientId;
+}
+
 - (NSString *)clientId {
     if (_clientId)
         return _clientId;
@@ -258,12 +271,12 @@
     } else {
         // launch mobile site
         NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                       @"product_id", productId,
-                                       @"client_id", clientId,
-                                       @"pickup_latitude", [NSNumber numberWithDouble:self.startLocation.latitude],
-                                       @"pickup_longitude", [NSNumber numberWithDouble:self.startLocation.longitude],
-                                       @"dropoff_latitude", [NSNumber numberWithDouble:self.endLocation.latitude],
-                                       @"dropoff_longitude", [NSNumber numberWithDouble:self.endLocation.longitude],
+                                       productId, @"product_id",
+                                       clientId, @"client_id",
+                                       [NSNumber numberWithDouble:self.startLocation.latitude], @"pickup_latitude",
+                                       [NSNumber numberWithDouble:self.startLocation.longitude], @"pickup_longitude",
+                                       [NSNumber numberWithDouble:self.endLocation.latitude], @"dropoff_latitude",
+                                       [NSNumber numberWithDouble:self.endLocation.longitude], @"dropoff_longitude",
                                        nil];
         
         if (self.firstName) [params setObject:self.firstName forKey:@"first_name"];

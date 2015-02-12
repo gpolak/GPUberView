@@ -15,7 +15,6 @@ CLLocationCoordinate2D pickup = CLLocationCoordinate2DMake(40.7471787,-73.997494
 CLLocationCoordinate2D dropoff = CLLocationCoordinate2DMake(40.712774,-74.006059);
     
 GPUberViewController *uber = [[GPUberViewController alloc] initWithServerToken:@"your_server_token"
-                                                                      clientId:nil
                                                                          start:pickup
                                                                            end:dropoff];
 [uber showInViewController:self];
@@ -57,7 +56,6 @@ To use this library you need a valid *Server Token* from Uber. You can get it he
 
 - pass in the desired *pickup* and *dropoff* `CLLocationCoordinate2D` values
 - pass in your Uber *server token* for authentication
-- **optional:** pass in your Uber *client id* to get credits for new user signups
 
 
 ```objective-c
@@ -65,14 +63,21 @@ CLLocationCoordinate2D pickup = CLLocationCoordinate2DMake(40.7471787,-73.997494
 CLLocationCoordinate2D dropoff = CLLocationCoordinate2DMake(40.712774,-74.006059);
     
 GPUberViewController *uber = [[GPUberViewController alloc] initWithServerToken:@"your_server_token"
-                                                                      clientId:nil
                                                                          start:pickup
                                                                            end:dropoff];
 ```
 
+### (Optional) Add your Client Id
+
+Add your Uber *client id* to get credits for new user signups.
+
+```objective-c
+uber.clientId = @"your_client_id";
+```
+
 ### (Optional) Add User Signup Parameters
 
-Adding these parameters will make the new user sign-up process smoother in case the user does not have the Uber app installed.
+Adding one or more of these parameters will make the new user sign-up process smoother in case the user does not have the Uber app installed.
 
 ```objective-c
 uber.firstName = @"John";
