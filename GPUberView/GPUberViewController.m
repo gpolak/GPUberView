@@ -99,8 +99,51 @@
     self.pulsingHalo.hidden = YES;
     
     [self refreshTable];
-    [self initMap];
-    [self initData];
+    
+    [[self initializeUber] continueWithExecutor:[BFExecutor mainThreadExecutor] withBlock:^id(BFTask *task) {
+        if (task.error) {
+            self.navigationItem.titleView = [GPUberUtils titleLabelForController:self.navigationController text:@"network error"];
+            [self.pulsingHalo removeFromSuperlayer];
+            
+            UILabel *label = [GPUberUtils errorLabelWithText:@"We're sorry, but there was a problem contacting Uber."];
+            [self.loadingView addSubview:label];
+            [label mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.centerX.equalTo(self.loadingView.mas_centerX);
+                make.centerY.equalTo(self.loadingView.mas_centerY);
+                make.width.equalTo(@(label.frame.size.width)).priorityHigh();
+                make.height.equalTo(@(label.frame.size.height)).priorityHigh();
+            }];
+        } else {
+            [self refreshTable];
+            
+            if (self.route)
+                [GPUberUtils zoomMapView:self.mapView toRoute:self.route animated:NO];
+            else
+                [GPUberUtils zoomMapViewToFitAnnotations:self.mapView animated:NO];
+            
+            [UIView animateWithDuration:0.5 animations:^{
+                self.loadingView.alpha = 0;
+            } completion:^(BOOL finished) {
+                [self.loadingView removeFromSuperview];
+            }];
+            
+            [UIView animateWithDuration:0.2 animations:^{
+                self.navigationItem.titleView.alpha = 0;
+            } completion:^(BOOL finished) {
+                UIImage *logo = [UIImage imageNamed:@"uber_logo_15"];
+                UIImageView *imageView = [[UIImageView alloc] initWithImage:logo];
+                imageView.contentMode = UIViewContentModeCenter;
+                self.navigationItem.titleView = imageView;
+                self.navigationItem.titleView.alpha = 0;
+                
+                [UIView animateWithDuration:0.3 animations:^{
+                    self.navigationItem.titleView.alpha = 1.0;
+                }];
+            }];
+        }
+        
+        return nil;
+    }];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -144,10 +187,22 @@
     return filteredArray.count > 0 ? filteredArray.firstObject : nil;
 }
 
-- (void)initData {
+- (BFTask *)initializeUber {
+    // wait for both map routing and Uber data to finish before dismissing wait screen
+    
+    NSMutableArray *tasks = [NSMutableArray new];
+    
+    [tasks addObject:[self setupMap]];
+    [tasks addObject:[self getUberData]];
+    
+    return [BFTask taskForCompletionOfAllTasks:tasks];
+}
+
+- (BFTask *)getUberData {
+    BFTaskCompletionSource *taskSource = [BFTaskCompletionSource taskCompletionSource];
+    
     [[[[GPUberNetworking productsForStart:self.startLocation
-                              serverToken:self.serverToken] continueWithExecutor:[BFExecutor mainThreadExecutor]
-                                                                                               withSuccessBlock:^id(BFTask *task) {
+                              serverToken:self.serverToken] continueWithSuccessBlock:^id(BFTask *task) {
         
         NSArray *products = task.result;
         NSMutableArray *elements = [NSMutableArray arrayWithCapacity:products.count];
@@ -155,55 +210,21 @@
             [elements addObject:[GPUberViewElement elementWithProduct:product]];
         
         self.elements = [NSArray arrayWithArray:elements];
-        [self refreshTable];
         
         return [GPUberNetworking pricesForStart:self.startLocation end:self.endLocation serverToken:self.serverToken];
-    }] continueWithExecutor:[BFExecutor mainThreadExecutor] withSuccessBlock:^id(BFTask *task) {
+    }] continueWithSuccessBlock:^id(BFTask *task) {
         NSArray *prices = task.result;
         for (GPUberPrice *price in prices) {
             GPUberViewElement *element = [self elementWithProductId:price.productId];
             [element parametrizeWithPrice:price];
         }
         
-        [self refreshTable];
-        
-        [UIView animateWithDuration:0.5 animations:^{
-            self.loadingView.alpha = 0;
-        } completion:^(BOOL finished) {
-            [self.loadingView removeFromSuperview];
-        }];
-        
-        [UIView animateWithDuration:0.2 animations:^{
-            self.navigationItem.titleView.alpha = 0;
-        } completion:^(BOOL finished) {
-            UIImage *logo = [UIImage imageNamed:@"uber_logo_15"];
-            UIImageView *imageView = [[UIImageView alloc] initWithImage:logo];
-            imageView.contentMode = UIViewContentModeCenter;
-            self.navigationItem.titleView = imageView;
-            self.navigationItem.titleView.alpha = 0;
-            
-            [UIView animateWithDuration:0.3 animations:^{
-                self.navigationItem.titleView.alpha = 1.0;
-            }];
-        }];
-        
         return [GPUberNetworking timeEstimatesForStart:self.startLocation serverToken:self.serverToken];
-    }] continueWithExecutor:[BFExecutor mainThreadExecutor] withBlock:^id(BFTask *task) {
+    }] continueWithBlock:^id(BFTask *task) {
         if (task.error) {
             NSLog(@"error fetching uber data:%@", task.error);
             
-            self.navigationItem.titleView = [GPUberUtils titleLabelForController:self.navigationController text:@"network error"];
-            self.pulsingHalo.hidden = YES;
-            
-            UILabel *label = [GPUberUtils errorLabelWithText:@"We're sorry, but there was a problem contacting Uber."];
-            [self.loadingView addSubview:label];
-            [label mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.centerX.equalTo(self.loadingView.mas_centerX);
-                make.centerY.equalTo(self.loadingView.mas_centerY);
-                make.width.equalTo(@(label.frame.size.width)).priorityHigh();
-                make.height.equalTo(@(label.frame.size.height)).priorityHigh();
-            }];
-            
+            [taskSource setError:task.error];
         } else {
             NSArray *times = task.result;
             for (GPUberTime *time in times) {
@@ -211,11 +232,13 @@
                 [element parametrizeWithTime:time];
             }
             
-            [self refreshTable];
+            [taskSource setResult:nil];
         }
         
         return nil;
     }];
+    
+    return taskSource.task;
 }
 
 - (void)launchUberWithProductId:(NSString *)productId clientId:(NSString *)clientId {
@@ -259,14 +282,27 @@
 
 #pragma mark - Map
 
-- (void)initMap {
+- (BFTask *)computeRouteZoom {
+    BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+
+    });
+    
+    return source.task;
+}
+
+- (BFTask *)setupMap {
+    BFTaskCompletionSource *taskSource = [BFTaskCompletionSource taskCompletionSource];
+    
     MKPlacemark *startMark = [[MKPlacemark alloc] initWithCoordinate:self.startLocation addressDictionary:nil];
     MKPlacemark *endMark = [[MKPlacemark alloc] initWithCoordinate:self.endLocation addressDictionary:nil];
     
     [self.mapView addAnnotation:startMark];
     [self.mapView addAnnotation:endMark];
-    // initial zoom before the route is computed
-    [GPUberUtils zoomMapViewToFitAnnotations:self.mapView animated:YES];
+    
+    // optimization to pre-load tile
+    [GPUberUtils zoomMapViewToFitAnnotations:self.mapView animated:NO];
     
     MKMapItem *startItem = [[MKMapItem alloc] initWithPlacemark:startMark];
     MKMapItem *endItem = [[MKMapItem alloc] initWithPlacemark:endMark];
@@ -282,9 +318,13 @@
         } else {
             self.route = [response.routes firstObject];
             [self.mapView addOverlay:self.route.polyline level:MKOverlayLevelAboveRoads];
-            [GPUberUtils zoomMapView:self.mapView toRoute:self.route animated:YES];
         }
+        
+        // it's a success either way, we just wait for this to finish
+        [taskSource setResult:nil];
     }];
+    
+    return taskSource.task;
 }
 
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id < MKOverlay >)overlay {
@@ -322,9 +362,6 @@
     self.tableView.rowHeight = 44;
     self.tableHeight.constant = self.tableView.rowHeight * self.elements.count;
     [self.tableView reloadData];
-    
-    // need to adjust zoom since map view rect has changed
-    [GPUberUtils zoomMapView:self.mapView toRoute:self.route animated:YES];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
