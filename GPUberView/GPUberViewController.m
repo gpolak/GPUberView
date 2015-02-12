@@ -48,7 +48,14 @@
                clientId:(NSString *)clientId
                   start:(CLLocationCoordinate2D)start
                     end:(CLLocationCoordinate2D)end {
-    // TODO: add asserts for params
+    
+    if (serverToken.length == 0)
+        [NSException raise:NSInvalidArgumentException format:@"invalid server token:%@", serverToken];
+    if (!CLLocationCoordinate2DIsValid(start))
+        [NSException raise:NSInvalidArgumentException format:@"invalid start (%f, %f)", start.latitude, start.longitude];
+    if (!CLLocationCoordinate2DIsValid(end))
+        [NSException raise:NSInvalidArgumentException format:@"invalid end (%f, %f)", end.latitude, end.longitude];
+    
     
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
