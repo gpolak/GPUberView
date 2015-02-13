@@ -1,3 +1,4 @@
+[![License](http://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 # GPUberView
 Summon Uber from your iOS app with 2 lines of code.
 
