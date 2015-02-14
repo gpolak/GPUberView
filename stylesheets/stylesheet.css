@@ -66,6 +66,14 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -1px;
 }
 
+h2 {
+  padding-top: 20px;
+}
+
+h3 {
+  padding-top: 10px;
+}
+
 h1 {
   font-size: 36px;
   font-weight: 700;
