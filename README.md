@@ -1,4 +1,4 @@
-# GPUberView [![License](http://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
+# GPUberView
 Summon Uber from your iOS app with 2 lines of code.
 
 ![GPUberView](gpuberview_screenshot.png)
@@ -94,4 +94,8 @@ uber.zipcode = @"10001";
 ```objective-c
 [uber showInViewController:self];
 ```
+
+## License
+
+GPUberView is available under the MIT license. See the LICENSE file for more info.
 
