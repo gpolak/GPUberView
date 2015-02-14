@@ -75,6 +75,15 @@ Add your Uber *client id* to get credits for new user signups.
 uber.clientId = @"your_client_id";
 ```
 
+### (Optional) Add Pickup and Dropoff Destination Names
+
+These labels will be shown to the user as the *pickup* and *dropoff* labels in the Uber app. If not supplied `GPUberView` (or the Uber app itself) will attempt to determine them from the coordinates.
+
+```objective-c
+uber.startName = @"South Station";
+uber.endName = @"Fenway Park";
+```
+
 ### (Optional) Add User Signup Parameters
 
 Adding one or more of these parameters will make the new user sign-up process smoother in case the user does not have the Uber app installed.
