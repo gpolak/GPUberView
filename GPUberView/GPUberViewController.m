@@ -34,6 +34,7 @@
 @property (nonatomic) NSString *serverToken;
 @property (nonatomic) CLLocationCoordinate2D startLocation;
 @property (nonatomic) CLLocationCoordinate2D endLocation;
+@property (nonatomic) CLPlacemark *destinationPlacemark;
 
 @property (nonatomic) NSArray *elements;
 
@@ -110,6 +111,16 @@
     
     [self refreshTable];
     
+    // begin destination RGeo
+    CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+    CLLocation *destinationLocation = [[CLLocation alloc] initWithLatitude:self.endLocation.latitude longitude:self.endLocation.longitude];
+    [geocoder reverseGeocodeLocation:destinationLocation completionHandler:^(NSArray *placemarks, NSError *error) {
+        // If there's an error, no biggie. This is just a convenience
+        if (!error || placemarks.count == 0) {
+            self.destinationPlacemark = [placemarks firstObject];
+        }
+    }];
+    
     [[self initializeUber] continueWithExecutor:[BFExecutor mainThreadExecutor] withBlock:^id(BFTask *task) {
         if (task.error) {
             self.navigationItem.titleView = [GPUberUtils titleLabelForController:self.navigationController text:@"network error"];
@@ -125,8 +136,9 @@
             }];
         } else {
             [self refreshTable];
-            [self.mapView layoutIfNeeded];
             
+            // must refresh map frame for proper zoom computation
+            [self.mapView layoutIfNeeded];
             if (self.route)
                 [GPUberUtils zoomMapView:self.mapView toRoute:self.route animated:NO];
             else
@@ -259,6 +271,16 @@
 - (void)launchUberWithProductId:(NSString *)productId clientId:(NSString *)clientId {
     NSString *urlString = nil;
     
+    NSString *dropoffNickname = self.endName;
+    if (!dropoffNickname && self.destinationPlacemark) {
+        if (self.destinationPlacemark.name)
+            dropoffNickname = self.destinationPlacemark.name;
+        else if (self.destinationPlacemark.subThoroughfare && self.destinationPlacemark.thoroughfare)
+            dropoffNickname = [NSString stringWithFormat:@"%@ %@", self.destinationPlacemark.subThoroughfare, self.destinationPlacemark.thoroughfare];
+        else
+            dropoffNickname = self.destinationPlacemark.thoroughfare;
+    }
+    
     if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"uber://"]]) {
         // launch Uber app
         NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
@@ -271,7 +293,7 @@
                                        nil];
         
         if (self.startName) [params setObject:self.startName forKey:@"pickup[nickname]"];
-        if (self.endName) [params setObject:self.endName forKey:@"dropoff[nickname]"];
+        if (dropoffNickname) [params setObject:dropoffNickname forKey:@"dropoff[nickname]"];
 
         urlString = [NSString stringWithFormat:@"uber://?action=setPickup&%@", [params urlEncodedString]];
     } else {
@@ -292,6 +314,9 @@
         if (self.mobileCountryCode) [params setObject:self.mobileCountryCode forKey:@"mobile_country_code"];
         if (self.mobilePhone) [params setObject:self.mobilePhone forKey:@"mobile_phone"];
         if (self.zipcode) [params setObject:self.zipcode forKey:@"zipcode"];
+        
+        if (self.startName) [params setObject:self.startName forKey:@"pickup_nickname"];
+        if (dropoffNickname) [params setObject:dropoffNickname forKey:@"dropoff_nickname"];
         
         urlString = [NSString stringWithFormat:@"https://m.uber.com/sign-up?%@", [params urlEncodedString]];
     }
