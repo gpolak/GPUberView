@@ -20,8 +20,14 @@
 #import <Masonry.h>
 
 #define DEFAULT_CLIENT_ID @"70zxopERw9Nx2OeQU8yrUYSpW69N-RVh"
+#define GP_UBER_VIEW_DOMAIN @"GP_UBER_VIEW_DOMAIN"
 
 @interface GPUberViewController () <UITableViewDataSource, UITableViewDelegate, MKMapViewDelegate>
+
+typedef NS_ENUM(NSInteger, GPUberViewError) {
+    GPUberViewErrorNetwork = 0,
+    GPUberViewErrorNoProducts = 1,
+};
 
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *tableHeight;
@@ -123,10 +129,25 @@
     
     [[self initializeUber] continueWithExecutor:[BFExecutor mainThreadExecutor] withBlock:^id(BFTask *task) {
         if (task.error) {
-            self.navigationItem.titleView = [GPUberUtils titleLabelForController:self.navigationController text:@"network error"];
             [self.pulsingHalo removeFromSuperlayer];
             
-            UILabel *label = [GPUberUtils errorLabelWithText:@"We're sorry, but there was a problem contacting Uber."];
+            NSString *title = @"unknown error";
+            NSString *message = @"We're sorry, but there was a problem contacting Uber.";
+            
+            NSString *domain = task.error.domain;
+            NSInteger code = task.error.code;
+            if ([domain isEqualToString:GP_UBER_VIEW_DOMAIN]) {
+                if (code == GPUberViewErrorNetwork) {
+                    title = @"network error";
+                    message = @"We're sorry, but there was a problem contacting Uber.";
+                } else if (code == GPUberViewErrorNoProducts) {
+                    title = @"service unavailable";
+                    message = @"We're sorry, but Uber is not yet available in your area.";
+                }
+            }
+            
+            self.navigationItem.titleView = [GPUberUtils titleLabelForController:self.navigationController text:title];
+            UILabel *label = [GPUberUtils errorLabelWithText:message];
             [self.loadingView addSubview:label];
             [label mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.centerX.equalTo(self.loadingView.mas_centerX);
@@ -232,13 +253,18 @@
                               serverToken:self.serverToken] continueWithSuccessBlock:^id(BFTask *task) {
         
         NSArray *products = task.result;
-        NSMutableArray *elements = [NSMutableArray arrayWithCapacity:products.count];
-        for (GPUberProduct *product in products)
-            [elements addObject:[GPUberViewElement elementWithProduct:product]];
-        
-        self.elements = [NSArray arrayWithArray:elements];
-        
-        return [GPUberNetworking pricesForStart:self.startLocation end:self.endLocation serverToken:self.serverToken];
+        if (products.count == 0) {
+            NSError *error = [NSError errorWithDomain:GP_UBER_VIEW_DOMAIN code:GPUberViewErrorNoProducts userInfo:nil];
+            return [BFTask taskWithError:error];
+        } else {
+            NSMutableArray *elements = [NSMutableArray arrayWithCapacity:products.count];
+            for (GPUberProduct *product in products)
+                [elements addObject:[GPUberViewElement elementWithProduct:product]];
+            
+            self.elements = [NSArray arrayWithArray:elements];
+            
+            return [GPUberNetworking pricesForStart:self.startLocation end:self.endLocation serverToken:self.serverToken];
+        }
     }] continueWithSuccessBlock:^id(BFTask *task) {
         NSArray *prices = task.result;
         for (GPUberPrice *price in prices) {
@@ -251,7 +277,11 @@
         if (task.error) {
             NSLog(@"error fetching uber data:%@", task.error);
             
-            [taskSource setError:task.error];
+            NSError *error = task.error;
+            if (![error.domain isEqualToString:GP_UBER_VIEW_DOMAIN])
+                error = [NSError errorWithDomain:GP_UBER_VIEW_DOMAIN code:GPUberViewErrorNetwork userInfo:task.error.userInfo];
+            
+            [taskSource setError:error];
         } else {
             NSArray *times = task.result;
             for (GPUberTime *time in times) {
