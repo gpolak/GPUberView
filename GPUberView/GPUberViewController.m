@@ -99,6 +99,7 @@
     
     [self.tableView registerNib:[UINib nibWithNibName:@"GPUberViewCell" bundle:nil] forCellReuseIdentifier:[GPUberViewCell reuseIdentifier]];
     
+    self.loadingView.hidden = NO;
     self.pulsingHalo = [PulsingHaloLayer layer];
     self.pulsingHalo.animationDuration = 1.5;
     self.pulsingHalo.backgroundColor = [UIColor uberBlue].CGColor;
@@ -124,6 +125,7 @@
             }];
         } else {
             [self refreshTable];
+            [self.mapView layoutIfNeeded];
             
             if (self.route)
                 [GPUberUtils zoomMapView:self.mapView toRoute:self.route animated:NO];
@@ -259,13 +261,17 @@
     
     if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"uber://"]]) {
         // launch Uber app
-        NSDictionary *params = @{@"product_id": productId,
-                                 @"client_id": clientId,
-                                 @"pickup[latitude]": [NSNumber numberWithDouble:self.startLocation.latitude],
-                                 @"pickup[longitude]": [NSNumber numberWithDouble:self.startLocation.longitude],
-                                 @"dropoff[latitude]": [NSNumber numberWithDouble:self.endLocation.latitude],
-                                 @"dropoff[longitude]": [NSNumber numberWithDouble:self.endLocation.longitude],
-                                 };
+        NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                       productId, @"product_id",
+                                       clientId, @"client_id",
+                                       [NSNumber numberWithDouble:self.startLocation.latitude], @"pickup[latitude]",
+                                       [NSNumber numberWithDouble:self.startLocation.longitude], @"pickup[longitude]",
+                                       [NSNumber numberWithDouble:self.endLocation.latitude], @"dropoff[latitude]",
+                                       [NSNumber numberWithDouble:self.endLocation.longitude], @"dropoff[longitude]",
+                                       nil];
+        
+        if (self.startName) [params setObject:self.startName forKey:@"pickup[nickname]"];
+        if (self.endName) [params setObject:self.endName forKey:@"dropoff[nickname]"];
 
         urlString = [NSString stringWithFormat:@"uber://?action=setPickup&%@", [params urlEncodedString]];
     } else {

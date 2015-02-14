@@ -18,6 +18,9 @@
 @property (nonatomic, readonly) CLLocationCoordinate2D startLocation;
 @property (nonatomic, readonly) CLLocationCoordinate2D endLocation;
 
+@property (nonatomic) NSString *startName;
+@property (nonatomic) NSString *endName;
+
 @property (nonatomic) NSString *firstName;
 @property (nonatomic) NSString *lastName;
 @property (nonatomic) NSString *email;
