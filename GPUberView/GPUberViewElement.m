@@ -16,6 +16,7 @@
         self.productId = product.productId;
         self.displayName = product.displayName;
         self.image = product.image;
+        self.timeEstimate = -1;
     }
     
     return self;

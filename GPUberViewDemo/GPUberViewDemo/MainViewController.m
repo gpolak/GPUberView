@@ -26,12 +26,14 @@
      */
     NSString *serverToken = @"P_DXM1dCDDq_f17lvgk57FBPWmc8vCD6Bwid2ULp";
     
+    // Boston: South Station
     CLLocationCoordinate2D pickup = CLLocationCoordinate2DMake(42.352311,-71.055304);
+    // Boston: Fenway Park
     CLLocationCoordinate2D dropoff = CLLocationCoordinate2DMake(42.346676,-71.097218);
     
-    GPUberViewController *uber = [[GPUberViewController alloc] initWithServerToken:serverToken
-                                                                             start:pickup
-                                                                               end:dropoff];
+    GPUberViewController *uber = [[GPUberViewController alloc] initWithServerToken:serverToken];
+    uber.startLocation = pickup;
+    uber.endLocation = dropoff;
 
     [uber showInViewController:self];
 }

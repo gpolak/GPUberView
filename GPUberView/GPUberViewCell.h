@@ -12,8 +12,8 @@
 
 @property (nonatomic, weak) IBOutlet UIImageView *productImageView;
 @property (nonatomic, weak) IBOutlet UILabel *productNameLabel;
-@property (nonatomic, weak) IBOutlet UILabel *timeEstimateLabel;
-@property (nonatomic, weak) IBOutlet UILabel *costEstimateLabel;
+@property (nonatomic, weak) IBOutlet UILabel *innerLabel;
+@property (nonatomic, weak) IBOutlet UILabel *rightLabel;
 
 + (NSString *)reuseIdentifier;
 

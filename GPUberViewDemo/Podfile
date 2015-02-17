@@ -8,3 +8,5 @@ pod 'Bolts', "~> 1.1"
 pod 'SDWebImage', '~>3.6'
 pod "PulsingHalo"
 pod 'Masonry', '~> 0.6'
+pod 'INTULocationManager', '~> 2.0'
+pod 'BlocksKit', '~> 2.2'

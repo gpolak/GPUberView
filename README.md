@@ -10,13 +10,12 @@ Summon Uber from your iOS app with 2 lines of code.
 
 // ...
 
-// supply the pickup and drop-off locations
-CLLocationCoordinate2D pickup = CLLocationCoordinate2DMake(40.7471787,-73.997494);
-CLLocationCoordinate2D dropoff = CLLocationCoordinate2DMake(40.712774,-74.006059);
-    
-GPUberViewController *uber = [[GPUberViewController alloc] initWithServerToken:@"your_server_token"
-                                                                         start:pickup
-                                                                           end:dropoff];
+GPUberViewController *uber = [[GPUberViewController alloc] initWithServerToken:@"your_server_token"];
+
+// optional
+uber.startLocation = CLLocationCoordinate2DMake(40.7471787,-73.997494);
+uber.endLocation = CLLocationCoordinate2DMake(40.712774,-74.006059);
+
 [uber showInViewController:self];
 ```
 
@@ -54,35 +53,40 @@ To use this library you need a valid *Server Token* from Uber. You can get it he
 
 ### Initialize the GPUberViewController
 
-- pass in the desired *pickup* and *dropoff* `CLLocationCoordinate2D` values
-- pass in your Uber *server token* for authentication
+Pass in your Uber *server token* for authentication.
 
 
-```objective-c
-CLLocationCoordinate2D pickup = CLLocationCoordinate2DMake(40.7471787,-73.997494);
-CLLocationCoordinate2D dropoff = CLLocationCoordinate2DMake(40.712774,-74.006059);
-    
-GPUberViewController *uber = [[GPUberViewController alloc] initWithServerToken:@"your_server_token"
-                                                                         start:pickup
-                                                                           end:dropoff];
+```objective-c    
+GPUberViewController *uber = [[GPUberViewController alloc] initWithServerToken:@"your_server_token"];
 ```
 
-### (Optional) Add your Client Id
+### (Optional) Specify the Pickup and/or Destination
 
-Add your Uber *client id* to get credits for new user signups.
+You can pass-in the desired pickup and dropoff coordinates as CLLocationCoordinate2D structs. If you omit `startLocation`, `GPUberView` will attempt to determine it based on your user's current location. If you omit the `endLocation`, `GPUberView` will not be able to calculate the price estimate, but still will be able to show the estimated pickup time.
+
+> **Note:** If you supply both the pickup and dropoff locations, make sure the distance between the two isn't exceedingly large. Uber cannot drive you from San Francisco to New York. (yet!)
 
 ```objective-c
-uber.clientId = @"your_client_id";
+// example: Boston South Station to Fenway Park
+uber.startLocation = CLLocationCoordinate2DMake(40.7471787,-73.997494);
+uber.endLocation = CLLocationCoordinate2DMake(40.712774,-74.006059);
 ```
 
-### (Optional) Add Pickup and Dropoff Destination Names
-
-These labels will be shown to the user as the *pickup* and *dropoff* labels in the Uber app. If not supplied `GPUberView` (or the Uber app itself) will attempt to determine them from the coordinates.
+You can also pass in user-readable names of the pickup and dropoff points. These labels will be shown to the user as the *pickup* and *dropoff* labels in the Uber app once launched. If not supplied `GPUberView` (or the Uber app itself) will attempt to determine these automatically.
 
 ```objective-c
 uber.startName = @"South Station";
 uber.endName = @"Fenway Park";
 ```
+
+### (Optional) Add Your Client Id
+
+Add your Uber *client id* to receive Uber credits for new user signups. You can get it here: https://developer.uber.com
+
+```objective-c
+uber.clientId = @"your_client_id";
+```
+
 
 ### (Optional) Add User Signup Parameters
 
