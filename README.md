@@ -72,6 +72,8 @@ uber.startLocation = CLLocationCoordinate2DMake(40.7471787,-73.997494);
 uber.endLocation = CLLocationCoordinate2DMake(40.712774,-74.006059);
 ```
 
+> **Note:** If you DO NOT supply the start location, `GPUberView` will attempt to find the user's current location. For iOS 8.0 and higher, this requires you to add the `NSLocationWhenInUseUsageDescription` key into your application's `Info.plist` file. The value should be a short string explaining the reason why your app needs location (e.g., "Uber needs to determine your pickup location.").
+
 You can also pass in user-readable names of the pickup and dropoff points. These labels will be shown to the user as the *pickup* and *dropoff* labels in the Uber app once launched. If not supplied `GPUberView` (or the Uber app itself) will attempt to determine these automatically.
 
 ```objective-c
