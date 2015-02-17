@@ -275,7 +275,7 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
             if (CLLocationCoordinate2DIsValid(self.endLocation)) {
                 return [GPUberNetworking pricesForStart:self.startLocation end:self.endLocation serverToken:self.serverToken];
             } else {
-                // no end location, just fall through
+                // no end location specified, just fall through
                 return [BFTask taskWithResult:nil];
             }
         }
@@ -315,6 +315,7 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
 - (void)launchUberWithProductId:(NSString *)productId clientId:(NSString *)clientId {
     NSString *urlString = nil;
     
+    // use user-supplied nickname, or computed if none available
     NSString *dropoffNickname = self.endName;
     if (!dropoffNickname && self.destinationPlacemark) {
         if (self.destinationPlacemark.name)
@@ -332,12 +333,15 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
                                        clientId, @"client_id",
                                        [NSNumber numberWithDouble:self.startLocation.latitude], @"pickup[latitude]",
                                        [NSNumber numberWithDouble:self.startLocation.longitude], @"pickup[longitude]",
-//                                       [NSNumber numberWithDouble:self.endLocation.latitude], @"dropoff[latitude]",
-//                                       [NSNumber numberWithDouble:self.endLocation.longitude], @"dropoff[longitude]",
                                        nil];
         
+        if (CLLocationCoordinate2DIsValid(self.endLocation)) {
+            [params setObject:[NSNumber numberWithDouble:self.endLocation.latitude] forKey:@"dropoff[latitude]"];
+            [params setObject:[NSNumber numberWithDouble:self.endLocation.longitude] forKey:@"dropoff[longitude]"];
+        }
+        
         if (self.startName) [params setObject:self.startName forKey:@"pickup[nickname]"];
-//        if (dropoffNickname) [params setObject:dropoffNickname forKey:@"dropoff[nickname]"];
+        if (dropoffNickname) [params setObject:dropoffNickname forKey:@"dropoff[nickname]"];
 
         urlString = [NSString stringWithFormat:@"uber://?action=setPickup&%@", [params urlEncodedString]];
     } else {
@@ -347,8 +351,6 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
                                        clientId, @"client_id",
                                        [NSNumber numberWithDouble:self.startLocation.latitude], @"pickup_latitude",
                                        [NSNumber numberWithDouble:self.startLocation.longitude], @"pickup_longitude",
-                                       [NSNumber numberWithDouble:self.endLocation.latitude], @"dropoff_latitude",
-                                       [NSNumber numberWithDouble:self.endLocation.longitude], @"dropoff_longitude",
                                        nil];
         
         if (self.firstName) [params setObject:self.firstName forKey:@"first_name"];
@@ -358,6 +360,11 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
         if (self.mobileCountryCode) [params setObject:self.mobileCountryCode forKey:@"mobile_country_code"];
         if (self.mobilePhone) [params setObject:self.mobilePhone forKey:@"mobile_phone"];
         if (self.zipcode) [params setObject:self.zipcode forKey:@"zipcode"];
+        
+        if (CLLocationCoordinate2DIsValid(self.endLocation)) {
+            [params setObject:[NSNumber numberWithDouble:self.endLocation.latitude] forKey:@"dropoff_latitude"];
+            [params setObject:[NSNumber numberWithDouble:self.endLocation.longitude] forKey:@"dropoff_longitude"];
+        }
         
         if (self.startName) [params setObject:self.startName forKey:@"pickup_nickname"];
         if (dropoffNickname) [params setObject:dropoffNickname forKey:@"dropoff_nickname"];
