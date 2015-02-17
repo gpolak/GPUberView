@@ -47,20 +47,6 @@ GPUberViewController *uber = [[GPUberViewController <span class="pl-s3">alloc</s
 [uber <span class="pl-s3">showInViewController:</span><span class="pl-v">self</span>];</pre></div>
 
 <h2>
-<a id="demo" class="anchor" href="#demo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Demo</h2>
-
-<ol>
-<li>Go to the GPUberViewDemo directory.</li>
-<li>Open the <code>.xcworkspace</code> (not the <code>.xcodeproj</code>) file.</li>
-<li>Run the app in the Simulator or on the device.</li>
-</ol>
-
-<h3>
-<a id="note" class="anchor" href="#note" aria-hidden="true"><span class="octicon octicon-link"></span></a>Note:</h3>
-
-<p>If the phone has the Uber app installed, tapping any of the Uber service buttons will bring it up with the appropriate parameters already set. Otherwise the Uber mobile website will be launched.</p>
-
-<h2>
 <a id="adding-gpuberview-to-your-project" class="anchor" href="#adding-gpuberview-to-your-project" aria-hidden="true"><span class="octicon octicon-link"></span></a>Adding GPUberView to Your Project</h2>
 
 <h3>
@@ -70,57 +56,11 @@ GPUberViewController *uber = [[GPUberViewController <span class="pl-s3">alloc</s
 pod <span class="pl-s1"><span class="pl-pds">"</span>GPUberView<span class="pl-pds">"</span></span></pre></div>
 
 <h2>
-<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+<a id="demo" class="anchor" href="#demo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Demo &amp; Full Documentation</h2>
 
-<h3>
-<a id="register-you-app-with-uber" class="anchor" href="#register-you-app-with-uber" aria-hidden="true"><span class="octicon octicon-link"></span></a>Register You App With Uber</h3>
+<p>Available here: <a href="https://github.com/gpolak/GPUberView">https://github.com/gpolak/GPUberView</a></p>
 
-<p>To use this library you need a valid <em>Server Token</em> from Uber. You can get it here: <a href="https://developer.uber.com">https://developer.uber.com</a></p>
 
-<h3>
-<a id="import-gpuberview" class="anchor" href="#import-gpuberview" aria-hidden="true"><span class="octicon octicon-link"></span></a>Import GPUberView</h3>
-
-<div class="highlight highlight-objective-c"><pre>#<span class="pl-k">import</span> <span class="pl-s1"><span class="pl-pds">&lt;</span>GPUberViewController.h<span class="pl-pds">&gt;</span></span></pre></div>
-
-<h3>
-<a id="initialize-the-gpuberviewcontroller" class="anchor" href="#initialize-the-gpuberviewcontroller" aria-hidden="true"><span class="octicon octicon-link"></span></a>Initialize the GPUberViewController</h3>
-
-<ul>
-<li>pass in the desired <em>pickup</em> and <em>dropoff</em> <code>CLLocationCoordinate2D</code> values</li>
-<li>pass in your Uber <em>server token</em> for authentication</li>
-</ul>
-
-<div class="highlight highlight-objective-c"><pre>CLLocationCoordinate2D pickup = CLLocationCoordinate2DMake(<span class="pl-c1">40.7471787</span>,-<span class="pl-c1">73.997494</span>);
-CLLocationCoordinate2D dropoff = CLLocationCoordinate2DMake(<span class="pl-c1">40.712774</span>,-<span class="pl-c1">74.006059</span>);
-
-GPUberViewController *uber = [[GPUberViewController <span class="pl-s3">alloc</span>] <span class="pl-s3">initWithServerToken:</span><span class="pl-s1"><span class="pl-pds">@"</span>your_server_token<span class="pl-pds">"</span></span>
-                                                                         <span class="pl-s3">start:</span>pickup
-                                                                           <span class="pl-s3">end:</span>dropoff];</pre></div>
-
-<h3>
-<a id="optional-add-your-client-id" class="anchor" href="#optional-add-your-client-id" aria-hidden="true"><span class="octicon octicon-link"></span></a>(Optional) Add your Client Id</h3>
-
-<p>Add your Uber <em>client id</em> to get credits for new user signups.</p>
-
-<div class="highlight highlight-objective-c"><pre>uber.clientId = <span class="pl-s1"><span class="pl-pds">@"</span>your_client_id<span class="pl-pds">"</span></span>;</pre></div>
-
-<h3>
-<a id="optional-add-user-signup-parameters" class="anchor" href="#optional-add-user-signup-parameters" aria-hidden="true"><span class="octicon octicon-link"></span></a>(Optional) Add User Signup Parameters</h3>
-
-<p>Adding one or more of these parameters will make the new user sign-up process smoother in case the user does not have the Uber app installed.</p>
-
-<div class="highlight highlight-objective-c"><pre>uber.firstName = <span class="pl-s1"><span class="pl-pds">@"</span>John<span class="pl-pds">"</span></span>;
-uber.lastName = <span class="pl-s1"><span class="pl-pds">@"</span>Doe<span class="pl-pds">"</span></span>;
-uber.email = <span class="pl-s1"><span class="pl-pds">@"</span>john@example.com<span class="pl-pds">"</span></span>;
-uber.countryCode = <span class="pl-s1"><span class="pl-pds">@"</span>US<span class="pl-pds">"</span></span>;
-uber.mobileCountryCode = <span class="pl-s1"><span class="pl-pds">@"</span>1<span class="pl-pds">"</span></span>;
-uber.mobilePhone = <span class="pl-s1"><span class="pl-pds">@"</span>2125554444<span class="pl-pds">"</span></span>;
-uber.zipcode = <span class="pl-s1"><span class="pl-pds">@"</span>10001<span class="pl-pds">"</span></span>;</pre></div>
-
-<h3>
-<a id="show-gpuberview" class="anchor" href="#show-gpuberview" aria-hidden="true"><span class="octicon octicon-link"></span></a>Show GPUberView</h3>
-
-<div class="highlight highlight-objective-c"><pre>[uber <span class="pl-s3">showInViewController:</span><span class="pl-v">self</span>];</pre></div>
 
 <h2>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
