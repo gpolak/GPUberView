@@ -24,6 +24,7 @@ Pod::Spec.new do |s|
   s.dependency 'SDWebImage', '~>3.6'
   s.dependency "PulsingHalo"
   s.dependency 'Masonry', '~> 0.6'
+  s.dependency 'INTULocationManager', '~> 2.0'
 
 end
 

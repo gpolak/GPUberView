@@ -18,6 +18,7 @@
 #import "GPUberViewCell.h"
 #import <PulsingHaloLayer.h>
 #import <Masonry.h>
+#import <INTULocationManager.h>
 
 #define DEFAULT_CLIENT_ID @"70zxopERw9Nx2OeQU8yrUYSpW69N-RVh"
 #define GP_UBER_VIEW_DOMAIN @"GP_UBER_VIEW_DOMAIN"
@@ -27,6 +28,8 @@
 typedef NS_ENUM(NSInteger, GPUberViewError) {
     GPUberViewErrorNetwork = 0,
     GPUberViewErrorNoProducts = 1,
+    GPUberViewErrorLocationUnavailable = 2,
+    GPUberViewErrorLocationDisabled = 3,
 };
 
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
@@ -36,13 +39,11 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
 
 @property (nonatomic) PulsingHaloLayer *pulsingHalo;
 @property (nonatomic) MKRoute *route;
-
 @property (nonatomic) NSString *serverToken;
 @property (nonatomic) CLPlacemark *destinationPlacemark;
-
 @property (nonatomic) NSArray *elements;
-
 @property (nonatomic) UIColor *previousWindowColor;
+@property (nonatomic) BOOL firstLoad;
 
 @end
 
@@ -59,6 +60,8 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
         self.serverToken = serverToken;
         self.startLocation = kCLLocationCoordinate2DInvalid;
         self.endLocation = kCLLocationCoordinate2DInvalid;
+        
+        self.firstLoad = NO;
     }
     
     return self;
@@ -124,8 +127,8 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
     
     [self refreshTable];
     
-    // begin destination RGeo for the end location (start is done by the Uber app)
-    if (CLLocationCoordinate2DIsValid(self.endLocation)) {
+    // begin destination RGeo for the end location (start is done by the Uber app) unless the desired nickname was supplied
+    if (!self.endName &&  CLLocationCoordinate2DIsValid(self.endLocation)) {
         CLGeocoder *geocoder = [[CLGeocoder alloc] init];
         CLLocation *destinationLocation = [[CLLocation alloc] initWithLatitude:self.endLocation.latitude longitude:self.endLocation.longitude];
         [geocoder reverseGeocodeLocation:destinationLocation completionHandler:^(NSArray *placemarks, NSError *error) {
@@ -136,7 +139,15 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
         }];
     }
     
-    [[self initializeUber] continueWithExecutor:[BFExecutor mainThreadExecutor] withBlock:^id(BFTask *task) {
+    self.firstLoad = YES;
+}
+
+- (void)launch {
+    [[[self determineStartLocation] continueWithSuccessBlock:^id(BFTask *task) {
+        // success, proceed
+        
+        return [self initializeUber];
+    }] continueWithExecutor:[BFExecutor mainThreadExecutor] withBlock:^id(BFTask *task) {
         if (task.error) {
             [self.pulsingHalo removeFromSuperlayer];
             
@@ -152,6 +163,12 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
                 } else if (code == GPUberViewErrorNoProducts) {
                     title = @"service unavailable";
                     message = @"We're sorry, but Uber is not yet available in your area.";
+                } else if (code == GPUberViewErrorLocationUnavailable) {
+                    title = @"no location";
+                    message = @"We're sorry, your location could not be determined.";
+                } else if (code == GPUberViewErrorLocationDisabled) {
+                    title = @"location disabled";
+                    message = @"You must enable location services to determine your pickup location.";
                 }
             }
             
@@ -209,6 +226,12 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
     // recenter after view has loaded (and shifted)
     self.pulsingHalo.position = self.loadingView.center;
     self.pulsingHalo.hidden = NO;
+    
+    // this needs to happen only once AND once the view loads (UI dims settle)
+    if (self.firstLoad) {
+        [self launch];
+        self.firstLoad = NO;
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -253,6 +276,61 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
     [tasks addObject:[self getUberData]];
     
     return [BFTask taskForCompletionOfAllTasks:tasks];
+}
+
+- (BFTask *)determineStartLocation {
+    BFTaskCompletionSource *taskSource = [BFTaskCompletionSource taskCompletionSource];
+    
+    if (CLLocationCoordinate2DIsValid(self.startLocation)) {
+        [taskSource setResult:nil];
+    } else if (![CLLocationManager locationServicesEnabled]) {
+        NSError *error = [NSError errorWithDomain:GP_UBER_VIEW_DOMAIN code:GPUberViewErrorLocationDisabled userInfo:nil];
+        [taskSource setError:error];
+    } else  {
+        CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+        if (status == kCLAuthorizationStatusNotDetermined) {
+            // TODO: show pre-permission dialog first
+            
+            [self getLocationWithTaskSource:taskSource delay:YES];
+
+        // else if location services authorized (messy due to backward iOS7 compatibility/deprecations)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        } else if ( ([CLLocationManager instanceMethodForSelector:@selector(requestWhenInUseAuthorization)] && status == kCLAuthorizationStatusAuthorizedWhenInUse) ||
+                   status == kCLAuthorizationStatusAuthorized ) {
+#pragma clang diagnostic pop
+            [self getLocationWithTaskSource:taskSource delay:NO];
+            
+        } else if (status == kCLAuthorizationStatusDenied || status == kCLAuthorizationStatusRestricted) {
+            NSError *error = [NSError errorWithDomain:GP_UBER_VIEW_DOMAIN code:GPUberViewErrorLocationDisabled userInfo:nil];
+            [taskSource setError:error];
+        } else {
+            NSError *error = [NSError errorWithDomain:GP_UBER_VIEW_DOMAIN code:GPUberViewErrorLocationUnavailable userInfo:nil];
+            [taskSource setError:error];
+        }
+    }
+    
+    return taskSource.task;
+}
+
+- (void)getLocationWithTaskSource:(BFTaskCompletionSource *)taskSource delay:(BOOL)delay {
+    INTULocationManager *manager = [INTULocationManager sharedInstance];
+    [manager requestLocationWithDesiredAccuracy:INTULocationAccuracyBlock
+                                        timeout:10
+                           delayUntilAuthorized:delay
+                                          block:^(CLLocation *currentLocation, INTULocationAccuracy achievedAccuracy, INTULocationStatus status) {
+                                              // proceed even with a timeout (user/Uber can refine accuracy later)
+                                              if (status == INTULocationStatusSuccess || (status == INTULocationStatusTimedOut && currentLocation)) {
+                                                  self.startLocation = currentLocation.coordinate;
+                                                  [taskSource setResult:nil];
+                                              } else if (status == INTULocationStatusServicesDenied || status == INTULocationStatusServicesDisabled) {
+                                                  NSError *error = [NSError errorWithDomain:GP_UBER_VIEW_DOMAIN code:GPUberViewErrorLocationDisabled userInfo:nil];
+                                                  [taskSource setError:error];
+                                              } else {
+                                                  NSError *error = [NSError errorWithDomain:GP_UBER_VIEW_DOMAIN code:GPUberViewErrorLocationUnavailable userInfo:nil];
+                                                  [taskSource setError:error];
+                                              }
+                                          }];
 }
 
 - (BFTask *)getUberData {

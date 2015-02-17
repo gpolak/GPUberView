@@ -34,10 +34,11 @@
     label.textColor = [UIColor whiteColor];
     label.font = [UIFont systemFontOfSize:16];
     label.text = text;
-    label.numberOfLines = 2;
+    label.numberOfLines = 0;
     label.textAlignment = NSTextAlignmentCenter;
-    label.lineBreakMode = NSLineBreakByWordWrapping;
+    label.lineBreakMode = NSLineBreakByTruncatingTail;
     label.minimumScaleFactor = 0.5;
+    [label sizeToFit];
     
     return label;
 }
