@@ -37,13 +37,12 @@
 
 <span class="pl-c">// ...</span>
 
-<span class="pl-c">// supply the pickup and drop-off locations</span>
-CLLocationCoordinate2D pickup = CLLocationCoordinate2DMake(<span class="pl-c1">40.7471787</span>,-<span class="pl-c1">73.997494</span>);
-CLLocationCoordinate2D dropoff = CLLocationCoordinate2DMake(<span class="pl-c1">40.712774</span>,-<span class="pl-c1">74.006059</span>);
+GPUberViewController *uber = [[GPUberViewController <span class="pl-s3">alloc</span>] <span class="pl-s3">initWithServerToken:</span><span class="pl-s1"><span class="pl-pds">@"</span>your_token<span class="pl-pds">"</span></span>];
 
-GPUberViewController *uber = [[GPUberViewController <span class="pl-s3">alloc</span>] <span class="pl-s3">initWithServerToken:</span><span class="pl-s1"><span class="pl-pds">@"</span>your_server_token<span class="pl-pds">"</span></span>
-                                                                         <span class="pl-s3">start:</span>pickup
-                                                                           <span class="pl-s3">end:</span>dropoff];
+<span class="pl-c">// optional: supply the pickup and drop-off locations</span>
+uber.startLocation = CLLocationCoordinate2DMake(<span class="pl-c1">40.7471787</span>,-<span class="pl-c1">73.997494</span>);
+uber.endLocation = CLLocationCoordinate2DMake(<span class="pl-c1">40.712774</span>,-<span class="pl-c1">74.006059</span>);
+
 [uber <span class="pl-s3">showInViewController:</span><span class="pl-v">self</span>];</pre></div>
 
 <h2>
