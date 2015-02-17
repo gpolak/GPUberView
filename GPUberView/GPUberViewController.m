@@ -38,8 +38,6 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
 @property (nonatomic) MKRoute *route;
 
 @property (nonatomic) NSString *serverToken;
-@property (nonatomic) CLLocationCoordinate2D startLocation;
-@property (nonatomic) CLLocationCoordinate2D endLocation;
 @property (nonatomic) CLPlacemark *destinationPlacemark;
 
 @property (nonatomic) NSArray *elements;
@@ -51,26 +49,35 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
 
 @implementation GPUberViewController
 
-- (id)initWithServerToken:(NSString *)serverToken
-                    start:(CLLocationCoordinate2D)start
-                      end:(CLLocationCoordinate2D)end {
-    
+- (id)initWithServerToken:(NSString *)serverToken {
     if (serverToken.length == 0)
         [NSException raise:NSInvalidArgumentException format:@"invalid server token:%@", serverToken];
-    if (!CLLocationCoordinate2DIsValid(start))
-        [NSException raise:NSInvalidArgumentException format:@"invalid start (%f, %f)", start.latitude, start.longitude];
-    if (!CLLocationCoordinate2DIsValid(end))
-        [NSException raise:NSInvalidArgumentException format:@"invalid end (%f, %f)", end.latitude, end.longitude];
     
     
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         self.serverToken = serverToken;
-        self.startLocation = start;
-        self.endLocation = end;
+        self.startLocation = kCLLocationCoordinate2DInvalid;
+        self.endLocation = kCLLocationCoordinate2DInvalid;
     }
     
     return self;
+}
+
+- (id)initWithServerToken:(NSString *)serverToken
+                    start:(CLLocationCoordinate2D)start
+                      end:(CLLocationCoordinate2D)end {
+    
+    if (!CLLocationCoordinate2DIsValid(start))
+        [NSException raise:NSInvalidArgumentException format:@"invalid start (%f, %f)", start.latitude, start.longitude];
+    if (!CLLocationCoordinate2DIsValid(end))
+        [NSException raise:NSInvalidArgumentException format:@"invalid end (%f, %f)", end.latitude, end.longitude];
+    
+    GPUberViewController *instance = [self initWithServerToken:serverToken];
+    instance.startLocation = start;
+    instance.endLocation = end;
+    
+    return instance;
 }
 
 - (id)initWithServerToken:(NSString *)serverToken
@@ -117,15 +124,17 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
     
     [self refreshTable];
     
-    // begin destination RGeo
-    CLGeocoder *geocoder = [[CLGeocoder alloc] init];
-    CLLocation *destinationLocation = [[CLLocation alloc] initWithLatitude:self.endLocation.latitude longitude:self.endLocation.longitude];
-    [geocoder reverseGeocodeLocation:destinationLocation completionHandler:^(NSArray *placemarks, NSError *error) {
-        // If there's an error, no biggie. This is just a convenience
-        if (!error || placemarks.count == 0) {
-            self.destinationPlacemark = [placemarks firstObject];
-        }
-    }];
+    // begin destination RGeo for the end location (start is done by the Uber app)
+    if (CLLocationCoordinate2DIsValid(self.endLocation)) {
+        CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+        CLLocation *destinationLocation = [[CLLocation alloc] initWithLatitude:self.endLocation.latitude longitude:self.endLocation.longitude];
+        [geocoder reverseGeocodeLocation:destinationLocation completionHandler:^(NSArray *placemarks, NSError *error) {
+            // If there's an error, no biggie. This is just a convenience
+            if (!error || placemarks.count == 0) {
+                self.destinationPlacemark = [placemarks firstObject];
+            }
+        }];
+    }
     
     [[self initializeUber] continueWithExecutor:[BFExecutor mainThreadExecutor] withBlock:^id(BFTask *task) {
         if (task.error) {
@@ -263,7 +272,12 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
             
             self.elements = [NSArray arrayWithArray:elements];
             
-            return [GPUberNetworking pricesForStart:self.startLocation end:self.endLocation serverToken:self.serverToken];
+            if (CLLocationCoordinate2DIsValid(self.endLocation)) {
+                return [GPUberNetworking pricesForStart:self.startLocation end:self.endLocation serverToken:self.serverToken];
+            } else {
+                // no end location, just fall through
+                return [BFTask taskWithResult:nil];
+            }
         }
     }] continueWithSuccessBlock:^id(BFTask *task) {
         NSArray *prices = task.result;
@@ -318,12 +332,12 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
                                        clientId, @"client_id",
                                        [NSNumber numberWithDouble:self.startLocation.latitude], @"pickup[latitude]",
                                        [NSNumber numberWithDouble:self.startLocation.longitude], @"pickup[longitude]",
-                                       [NSNumber numberWithDouble:self.endLocation.latitude], @"dropoff[latitude]",
-                                       [NSNumber numberWithDouble:self.endLocation.longitude], @"dropoff[longitude]",
+//                                       [NSNumber numberWithDouble:self.endLocation.latitude], @"dropoff[latitude]",
+//                                       [NSNumber numberWithDouble:self.endLocation.longitude], @"dropoff[longitude]",
                                        nil];
         
         if (self.startName) [params setObject:self.startName forKey:@"pickup[nickname]"];
-        if (dropoffNickname) [params setObject:dropoffNickname forKey:@"dropoff[nickname]"];
+//        if (dropoffNickname) [params setObject:dropoffNickname forKey:@"dropoff[nickname]"];
 
         urlString = [NSString stringWithFormat:@"uber://?action=setPickup&%@", [params urlEncodedString]];
     } else {
@@ -361,34 +375,46 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
 - (BFTask *)setupMap {
     BFTaskCompletionSource *taskSource = [BFTaskCompletionSource taskCompletionSource];
     
-    MKPlacemark *startMark = [[MKPlacemark alloc] initWithCoordinate:self.startLocation addressDictionary:nil];
-    MKPlacemark *endMark = [[MKPlacemark alloc] initWithCoordinate:self.endLocation addressDictionary:nil];
-    
-    [self.mapView addAnnotation:startMark];
-    [self.mapView addAnnotation:endMark];
-    
-    // optimization to pre-load tile
-    [GPUberUtils zoomMapViewToFitAnnotations:self.mapView animated:NO];
-    
-    MKMapItem *startItem = [[MKMapItem alloc] initWithPlacemark:startMark];
-    MKMapItem *endItem = [[MKMapItem alloc] initWithPlacemark:endMark];
-    
-    MKDirectionsRequest *request = [[MKDirectionsRequest alloc] init];
-    request.source = startItem;
-    request.destination = endItem;
-    
-    MKDirections *directions = [[MKDirections alloc] initWithRequest:request];
-    [directions calculateDirectionsWithCompletionHandler:^(MKDirectionsResponse *response, NSError *error) {
-        if (error || response.routes.count == 0) {
-            NSLog(@"error calculating directions:%@", error);
-        } else {
-            self.route = [response.routes firstObject];
-            [self.mapView addOverlay:self.route.polyline level:MKOverlayLevelAboveRoads];
-        }
+    if (CLLocationCoordinate2DIsValid(self.startLocation) && CLLocationCoordinate2DIsValid(self.endLocation)) {
+        MKPlacemark *startMark = [[MKPlacemark alloc] initWithCoordinate:self.startLocation addressDictionary:nil];
+        MKPlacemark *endMark = [[MKPlacemark alloc] initWithCoordinate:self.endLocation addressDictionary:nil];
         
-        // it's a success either way, we just wait for this to finish
+        [self.mapView addAnnotation:startMark];
+        [self.mapView addAnnotation:endMark];
+        
+        // optimization to pre-load tile
+        [GPUberUtils zoomMapViewToFitAnnotations:self.mapView animated:NO];
+        
+        MKMapItem *startItem = [[MKMapItem alloc] initWithPlacemark:startMark];
+        MKMapItem *endItem = [[MKMapItem alloc] initWithPlacemark:endMark];
+        
+        MKDirectionsRequest *request = [[MKDirectionsRequest alloc] init];
+        request.source = startItem;
+        request.destination = endItem;
+        
+        MKDirections *directions = [[MKDirections alloc] initWithRequest:request];
+        [directions calculateDirectionsWithCompletionHandler:^(MKDirectionsResponse *response, NSError *error) {
+            if (error || response.routes.count == 0) {
+                NSLog(@"error calculating directions:%@", error);
+            } else {
+                self.route = [response.routes firstObject];
+                [self.mapView addOverlay:self.route.polyline level:MKOverlayLevelAboveRoads];
+            }
+            
+            // it's a success either way, we just wait for this to finish
+            [taskSource setResult:nil];
+        }];
+    } else if (CLLocationCoordinate2DIsValid(self.startLocation)) {
+        MKPlacemark *startMark = [[MKPlacemark alloc] initWithCoordinate:self.startLocation addressDictionary:nil];
+        
+        [self.mapView addAnnotation:startMark];
+        
+        // done
         [taskSource setResult:nil];
-    }];
+    } else {
+        // done
+        [taskSource setResult:nil];
+    }
     
     return taskSource.task;
 }
@@ -447,10 +473,15 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
     
     cell.productNameLabel.text = element.displayName;
     
-    cell.timeEstimateLabel.text = [element timeEstimateString];
-    
-    cell.costEstimateLabel.text = element.priceEstimate;
-    cell.costEstimateLabel.textColor = element.surgeMultiplier > 1 ? [UIColor uberBlue] : [UIColor grayColor];
+    if (element.priceEstimate) {
+        cell.innerLabel.text = [element timeEstimateString];
+        
+        cell.rightLabel.text = element.priceEstimate;
+        cell.rightLabel.textColor = element.surgeMultiplier > 1 ? [UIColor uberBlue] : [UIColor grayColor];
+    } else {
+        cell.innerLabel.text = nil;
+        cell.rightLabel.text = [element timeEstimateString];
+    }
     
     return cell;
 }

@@ -11,8 +11,8 @@
 @implementation GPUberViewCell
 
 - (void)awakeFromNib {
-    self.costEstimateLabel.textColor = [UIColor grayColor];
-    self.timeEstimateLabel.textColor = [UIColor grayColor];
+    self.rightLabel.textColor = [UIColor grayColor];
+    self.innerLabel.textColor = [UIColor grayColor];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

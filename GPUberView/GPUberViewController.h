@@ -15,8 +15,9 @@
 
 @property (nonatomic, readonly) NSString *serverToken;
 @property (nonatomic) NSString *clientId;
-@property (nonatomic, readonly) CLLocationCoordinate2D startLocation;
-@property (nonatomic, readonly) CLLocationCoordinate2D endLocation;
+
+@property (nonatomic) CLLocationCoordinate2D startLocation;
+@property (nonatomic) CLLocationCoordinate2D endLocation;
 
 @property (nonatomic) NSString *startName;
 @property (nonatomic) NSString *endName;
@@ -29,14 +30,16 @@
 @property (nonatomic) NSString *mobilePhone;
 @property (nonatomic) NSString *zipcode;
 
+- (id)initWithServerToken:(NSString *)serverToken;
+
 - (id)initWithServerToken:(NSString *)serverToken
                     start:(CLLocationCoordinate2D)start
-                      end:(CLLocationCoordinate2D)end;
+                      end:(CLLocationCoordinate2D)end __attribute__((deprecated("use initWithServerToken: instead")));
 
 - (id)initWithServerToken:(NSString *)serverToken
                  clientId:(NSString *)clientId
                     start:(CLLocationCoordinate2D)start
-                      end:(CLLocationCoordinate2D)end __attribute__((deprecated("use initWithServerToken:start:end: instead")));
+                      end:(CLLocationCoordinate2D)end __attribute__((deprecated("use initWithServerToken: instead")));
 
 - (void)showInViewController:(UIViewController *)viewController;
 

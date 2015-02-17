@@ -29,9 +29,8 @@
     CLLocationCoordinate2D pickup = CLLocationCoordinate2DMake(42.352311,-71.055304);
     CLLocationCoordinate2D dropoff = CLLocationCoordinate2DMake(42.346676,-71.097218);
     
-    GPUberViewController *uber = [[GPUberViewController alloc] initWithServerToken:serverToken
-                                                                             start:pickup
-                                                                               end:dropoff];
+    GPUberViewController *uber = [[GPUberViewController alloc] initWithServerToken:serverToken];
+    uber.startLocation = pickup;
 
     [uber showInViewController:self];
 }
