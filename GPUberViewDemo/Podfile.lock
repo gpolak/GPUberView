@@ -20,6 +20,21 @@ PODS:
   - AFNetworking/UIKit (2.5.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
+  - BlocksKit (2.2.5):
+    - BlocksKit/All (= 2.2.5)
+  - BlocksKit/All (2.2.5):
+    - BlocksKit/Core
+    - BlocksKit/DynamicDelegate
+    - BlocksKit/MessageUI
+    - BlocksKit/UIKit
+  - BlocksKit/Core (2.2.5)
+  - BlocksKit/DynamicDelegate (2.2.5)
+  - BlocksKit/MessageUI (2.2.5):
+    - BlocksKit/Core
+    - BlocksKit/DynamicDelegate
+  - BlocksKit/UIKit (2.2.5):
+    - BlocksKit/Core
+    - BlocksKit/DynamicDelegate
   - Bolts (1.1.3)
   - INTULocationManager (2.0.2)
   - JSONModel (1.0.2)
@@ -31,6 +46,7 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (~> 2.5)
+  - BlocksKit (~> 2.2)
   - Bolts (~> 1.1)
   - INTULocationManager (~> 2.0)
   - JSONModel (~> 1.0)
@@ -40,6 +56,7 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   AFNetworking: 8bee59492a6ff15d69130efa4d0dc67e0094a52a
+  BlocksKit: 4439e7f30a9f90743462ca63545a15c1f4304cef
   Bolts: 3db0a875235e0c9042b013af13af0f00f79b102c
   INTULocationManager: 83bec34472a706e178face50a4e5e21ca986b7d2
   JSONModel: cbdef0fdff1cc70e913a860861d3072860efd3a1

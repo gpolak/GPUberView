@@ -18,7 +18,6 @@
 
 @property (nonatomic) CLLocationCoordinate2D startLocation;
 @property (nonatomic) CLLocationCoordinate2D endLocation;
-
 @property (nonatomic) NSString *startName;
 @property (nonatomic) NSString *endName;
 
@@ -32,10 +31,12 @@
 
 - (id)initWithServerToken:(NSString *)serverToken;
 
+// deprecated in 1.0
 - (id)initWithServerToken:(NSString *)serverToken
                     start:(CLLocationCoordinate2D)start
                       end:(CLLocationCoordinate2D)end __attribute__((deprecated("use initWithServerToken: instead")));
 
+// deprecated in 0.4
 - (id)initWithServerToken:(NSString *)serverToken
                  clientId:(NSString *)clientId
                     start:(CLLocationCoordinate2D)start

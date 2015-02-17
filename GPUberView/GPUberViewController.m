@@ -19,6 +19,7 @@
 #import <PulsingHaloLayer.h>
 #import <Masonry.h>
 #import <INTULocationManager.h>
+#import "UIAlertView+BlocksKit.h"
 
 #define DEFAULT_CLIENT_ID @"70zxopERw9Nx2OeQU8yrUYSpW69N-RVh"
 #define GP_UBER_VIEW_DOMAIN @"GP_UBER_VIEW_DOMAIN"
@@ -30,6 +31,7 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
     GPUberViewErrorNoProducts = 1,
     GPUberViewErrorLocationUnavailable = 2,
     GPUberViewErrorLocationDisabled = 3,
+    GPUberViewErrorLocationPrePermissionDeclined = 4,
 };
 
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
@@ -142,6 +144,32 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
     self.firstLoad = YES;
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    UIApplication *application = [UIApplication sharedApplication];
+    self.previousWindowColor = application.keyWindow.backgroundColor;
+    application.keyWindow.backgroundColor = [UIColor whiteColor];
+    
+    // recenter after view has loaded (and shifted)
+    self.pulsingHalo.position = self.loadingView.center;
+    self.pulsingHalo.hidden = NO;
+    
+    // this needs to happen only once AND once the view loads (UI dims settle)
+    if (self.firstLoad) {
+        [self launch];
+        self.firstLoad = NO;
+    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    // restore previous UI values
+    UIApplication *application = [UIApplication sharedApplication];
+    application.keyWindow.backgroundColor = self.previousWindowColor;
+}
+
 - (void)launch {
     [[[self determineStartLocation] continueWithSuccessBlock:^id(BFTask *task) {
         // success, proceed
@@ -169,6 +197,12 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
                 } else if (code == GPUberViewErrorLocationDisabled) {
                     title = @"location disabled";
                     message = @"You must enable location services to determine your pickup location.";
+                } else if (code == GPUberViewErrorLocationPrePermissionDeclined) {
+                    title = nil;
+                    message = nil;
+                    
+                    [self cancelView];
+                    return nil;
                 }
             }
             
@@ -216,32 +250,6 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
     }];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-    UIApplication *application = [UIApplication sharedApplication];
-    self.previousWindowColor = application.keyWindow.backgroundColor;
-    application.keyWindow.backgroundColor = [UIColor whiteColor];
-    
-    // recenter after view has loaded (and shifted)
-    self.pulsingHalo.position = self.loadingView.center;
-    self.pulsingHalo.hidden = NO;
-    
-    // this needs to happen only once AND once the view loads (UI dims settle)
-    if (self.firstLoad) {
-        [self launch];
-        self.firstLoad = NO;
-    }
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    
-    // restore previous UI values
-    UIApplication *application = [UIApplication sharedApplication];
-    application.keyWindow.backgroundColor = self.previousWindowColor;
-}
-
 - (void)setClientId:(NSString *)clientId {
     _clientId = clientId;
 }
@@ -281,29 +289,48 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
 - (BFTask *)determineStartLocation {
     BFTaskCompletionSource *taskSource = [BFTaskCompletionSource taskCompletionSource];
     
+    // is location passed-in by the user?
     if (CLLocationCoordinate2DIsValid(self.startLocation)) {
         [taskSource setResult:nil];
+        
+    // is location enabled?
     } else if (![CLLocationManager locationServicesEnabled]) {
         NSError *error = [NSError errorWithDomain:GP_UBER_VIEW_DOMAIN code:GPUberViewErrorLocationDisabled userInfo:nil];
         [taskSource setError:error];
+        
+    // should ask for location permissions?
     } else  {
         CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
         if (status == kCLAuthorizationStatusNotDetermined) {
-            // TODO: show pre-permission dialog first
-            
-            [self getLocationWithTaskSource:taskSource delay:YES];
+            // show pre-permission dialog first (https://medium.com/@mulligan/the-right-way-to-ask-users-for-ios-permissions-96fa4eb54f2c)
+            [UIAlertView bk_showAlertViewWithTitle:@"Allow Location?"
+                                           message:@"Uber needs to determine your pickup location."
+                                 cancelButtonTitle:@"Not Now"
+                                 otherButtonTitles:@[@"Give Access"]
+                                           handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+                                               
+                                               if (buttonIndex != alertView.cancelButtonIndex) {
+                                                   [self getLocationWithTaskSource:taskSource delay:YES];
+                                               } else {
+                                                   NSError *error = [NSError errorWithDomain:GP_UBER_VIEW_DOMAIN code:GPUberViewErrorLocationPrePermissionDeclined userInfo:nil];
+                                                   [taskSource setError:error];
+                                               }
+            }];
 
-        // else if location services authorized (messy due to backward iOS7 compatibility/deprecations)
+        // else if location services authorized (looks messy due to backward iOS7 compatibility/deprecation handling)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
         } else if ( ([CLLocationManager instanceMethodForSelector:@selector(requestWhenInUseAuthorization)] && status == kCLAuthorizationStatusAuthorizedWhenInUse) ||
                    status == kCLAuthorizationStatusAuthorized ) {
 #pragma clang diagnostic pop
             [self getLocationWithTaskSource:taskSource delay:NO];
-            
+        
+        // denied location permissions?
         } else if (status == kCLAuthorizationStatusDenied || status == kCLAuthorizationStatusRestricted) {
             NSError *error = [NSError errorWithDomain:GP_UBER_VIEW_DOMAIN code:GPUberViewErrorLocationDisabled userInfo:nil];
             [taskSource setError:error];
+            
+        // some other error?
         } else {
             NSError *error = [NSError errorWithDomain:GP_UBER_VIEW_DOMAIN code:GPUberViewErrorLocationUnavailable userInfo:nil];
             [taskSource setError:error];
@@ -565,7 +592,9 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
         cell.rightLabel.textColor = element.surgeMultiplier > 1 ? [UIColor uberBlue] : [UIColor grayColor];
     } else {
         cell.innerLabel.text = nil;
+        
         cell.rightLabel.text = [element timeEstimateString];
+        cell.rightLabel.textColor = [UIColor grayColor];
     }
     
     return cell;
