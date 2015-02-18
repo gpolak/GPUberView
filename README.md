@@ -62,19 +62,21 @@ GPUberViewController *uber = [[GPUberViewController alloc] initWithServerToken:@
 
 ### (Optional) Specify the Pickup and/or Destination
 
-You can pass-in the desired pickup and dropoff coordinates as CLLocationCoordinate2D structs. If you omit `startLocation`, `GPUberView` will attempt to determine it based on your user's current location. If you omit the `endLocation`, `GPUberView` will not be able to calculate the price estimate, but still will be able to show the estimated pickup time.
-
-> **Note:** If you supply both the pickup and dropoff locations, make sure the distance between the two isn't exceedingly large. Uber cannot drive you from San Francisco to New York. (yet!)
-
+You can pass-in the desired pickup and dropoff coordinates as CLLocationCoordinate2D structs.
 ```objective-c
-// example: Boston South Station to Fenway Park
+// example: from Boston South Station to Fenway Park
 uber.startLocation = CLLocationCoordinate2DMake(40.7471787,-73.997494);
 uber.endLocation = CLLocationCoordinate2DMake(40.712774,-74.006059);
 ```
 
-> **Note:** If you DO NOT supply the start location, `GPUberView` will attempt to find the user's current location. For iOS 8.0 and higher, this requires you to add the `NSLocationWhenInUseUsageDescription` key into your application's `Info.plist` file. The value should be a short string explaining the reason why your app needs location (e.g., "Uber needs to determine your pickup location.").
+- If you omit `startLocation`, GPUberView will attempt to determine it based on your user's current location. For iOS 8.0 and higher, this requires you to add the [`NSLocationWhenInUseUsageDescription`](https://developer.apple.com/library/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW26) key into your application's `Info.plist` file. The value should be a short string explaining the reason why your app needs location (e.g., "Uber needs to determine your pickup location.").
 
-You can also pass in user-readable names of the pickup and dropoff points. These labels will be shown to the user as the *pickup* and *dropoff* labels in the Uber app once launched. If not supplied `GPUberView` (or the Uber app itself) will attempt to determine these automatically.
+- If you omit the `endLocation`, GPUberView will not be able to calculate the price estimate, but still will be able to show the estimated pickup time.
+
+
+> **Note:** If you supply both the pickup and dropoff locations, make sure the distance between the two isn't exceedingly large. [Most Uber products](http://blog.uber.com/tag/uberchopper/) cannot drive you from San Francisco to New York.
+
+You can also pass in user-readable names of the pickup and dropoff points. These labels will be shown to the user as the *pickup* and *dropoff* labels in the Uber app once launched. If not supplied, GPUberView (or the Uber app itself) will attempt to determine these automatically.
 
 ```objective-c
 uber.startName = @"South Station";
