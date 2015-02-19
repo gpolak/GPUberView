@@ -46,6 +46,7 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
 @property (nonatomic) NSArray *elements;
 @property (nonatomic) UIColor *previousWindowColor;
 @property (nonatomic) BOOL firstLoad;
+@property (nonatomic) INTULocationRequestID locationRequestId;
 
 @end
 
@@ -262,6 +263,8 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
 }
 
 - (IBAction)cancelView {
+    [[INTULocationManager sharedInstance] cancelLocationRequest:self.locationRequestId];
+    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -342,22 +345,35 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
 
 - (void)getLocationWithTaskSource:(BFTaskCompletionSource *)taskSource delay:(BOOL)delay {
     INTULocationManager *manager = [INTULocationManager sharedInstance];
-    [manager requestLocationWithDesiredAccuracy:INTULocationAccuracyBlock
-                                        timeout:10
-                           delayUntilAuthorized:delay
-                                          block:^(CLLocation *currentLocation, INTULocationAccuracy achievedAccuracy, INTULocationStatus status) {
-                                              // proceed even with a timeout (user/Uber can refine accuracy later)
-                                              if (status == INTULocationStatusSuccess || (status == INTULocationStatusTimedOut && currentLocation)) {
-                                                  self.startLocation = currentLocation.coordinate;
-                                                  [taskSource setResult:nil];
-                                              } else if (status == INTULocationStatusServicesDenied || status == INTULocationStatusServicesDisabled) {
-                                                  NSError *error = [NSError errorWithDomain:GP_UBER_VIEW_DOMAIN code:GPUberViewErrorLocationDisabled userInfo:nil];
-                                                  [taskSource setError:error];
-                                              } else {
-                                                  NSError *error = [NSError errorWithDomain:GP_UBER_VIEW_DOMAIN code:GPUberViewErrorLocationUnavailable userInfo:nil];
-                                                  [taskSource setError:error];
-                                              }
-                                          }];
+    self.locationRequestId = [manager requestLocationWithDesiredAccuracy:INTULocationAccuracyBlock
+                                                                 timeout:10
+                                                    delayUntilAuthorized:delay
+                                                                   block:^(CLLocation *currentLocation, INTULocationAccuracy achievedAccuracy, INTULocationStatus status) {
+       // proceed even with a timeout (user/Uber can refine accuracy later)
+       if (status == INTULocationStatusSuccess || (status == INTULocationStatusTimedOut && currentLocation)) {
+           self.startLocation = currentLocation.coordinate;
+           [taskSource setResult:nil];
+
+           // we have a good enough location to show the UI and proceed, but attempt to improve it if too coarse
+           if (achievedAccuracy < INTULocationAccuracyHouse) {
+               self.locationRequestId = [manager subscribeToLocationUpdatesWithBlock:^(CLLocation *currentLocation, INTULocationAccuracy achievedAccuracy, INTULocationStatus status) {
+                   if (status == INTULocationStatusSuccess) {
+                       self.startLocation = currentLocation.coordinate;
+                       
+                       if (achievedAccuracy >= INTULocationAccuracyRoom)
+                           [manager cancelLocationRequest:self.locationRequestId];
+                   }
+               }];
+           }
+           
+       } else if (status == INTULocationStatusServicesDenied || status == INTULocationStatusServicesDisabled) {
+           NSError *error = [NSError errorWithDomain:GP_UBER_VIEW_DOMAIN code:GPUberViewErrorLocationDisabled userInfo:nil];
+           [taskSource setError:error];
+       } else {
+           NSError *error = [NSError errorWithDomain:GP_UBER_VIEW_DOMAIN code:GPUberViewErrorLocationUnavailable userInfo:nil];
+           [taskSource setError:error];
+       }
+    }];
 }
 
 - (BFTask *)getUberData {
@@ -476,6 +492,9 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
         
         urlString = [NSString stringWithFormat:@"https://m.uber.com/sign-up?%@", [params urlEncodedString]];
     }
+    
+    // cancel any pending location updates
+    [[INTULocationManager sharedInstance] cancelLocationRequest:self.locationRequestId];
     
     NSLog(@"[GPUberView] launching Uber with: %@", urlString);
     [GPUberUtils openURL:[NSURL URLWithString:urlString]];
