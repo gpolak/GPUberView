@@ -22,7 +22,6 @@
 #import "UIAlertView+BlocksKit.h"
 
 #define DEFAULT_CLIENT_ID @"70zxopERw9Nx2OeQU8yrUYSpW69N-RVh"
-#define GP_UBER_VIEW_DOMAIN @"GP_UBER_VIEW_DOMAIN"
 
 @interface GPUberViewController () <UITableViewDataSource, UITableViewDelegate, MKMapViewDelegate>
 
@@ -32,6 +31,7 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
     GPUberViewErrorLocationUnavailable = 2,
     GPUberViewErrorLocationDisabled = 3,
     GPUberViewErrorLocationPrePermissionDeclined = 4,
+    GPUberViewErrorDistanceExceeded = 5,
 };
 
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
@@ -198,6 +198,9 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
                 } else if (code == GPUberViewErrorLocationDisabled) {
                     title = @"location disabled";
                     message = @"You must enable location services to determine your pickup location.";
+                } else if (code == GPUberViewErrorDistanceExceeded) {
+                    title = @"distance exceeded";
+                    message = @"We're sorry, but the requested route is too long.";
                 } else if (code == GPUberViewErrorLocationPrePermissionDeclined) {
                     title = nil;
                     message = nil;
@@ -413,8 +416,12 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
             NSLog(@"error fetching uber data:%@", task.error);
             
             NSError *error = task.error;
-            if (![error.domain isEqualToString:GP_UBER_VIEW_DOMAIN])
-                error = [NSError errorWithDomain:GP_UBER_VIEW_DOMAIN code:GPUberViewErrorNetwork userInfo:task.error.userInfo];
+            if (![error.domain isEqualToString:GP_UBER_VIEW_DOMAIN]) {
+                if (error.code == 422)
+                    error = [NSError errorWithDomain:GP_UBER_VIEW_DOMAIN code:GPUberViewErrorDistanceExceeded userInfo:task.error.userInfo];
+                else
+                    error = [NSError errorWithDomain:GP_UBER_VIEW_DOMAIN code:GPUberViewErrorNetwork userInfo:task.error.userInfo];
+            }
             
             [taskSource setError:error];
         } else {

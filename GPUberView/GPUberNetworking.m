@@ -15,10 +15,25 @@
 
 @implementation GPUberNetworking
 
+NSString *const GP_UBER_VIEW_DOMAIN = @"GP_UBER_VIEW_DOMAIN";
+
 + (NSURL *)urlWithEndpoint:(NSString *)endpoint {
     NSString *base = @"https://api.uber.com";
     NSURL *baseURL = [NSURL URLWithString:base];
     return [NSURL URLWithString:endpoint relativeToURL:baseURL];
+}
+
++ (NSError *)errorWithError:(NSError *)oldError operation:(AFHTTPRequestOperation *)operation {
+    // preserve original values
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithDictionary:oldError.userInfo];
+    [userInfo setObject:[NSNumber numberWithInteger:oldError.code] forKey:@"original_status"];
+    
+    // add sane status code
+    NSError *error = [NSError errorWithDomain:oldError.domain
+                                         code:operation.response.statusCode
+                                     userInfo:userInfo];
+    
+    return error;
 }
 
 + (BFTask *)GETWithEndpoint:(NSString *)endpoint serverToken:(NSString *)serverToken params:(NSDictionary *)params {
@@ -43,7 +58,9 @@
             [taskSource setError:error];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        [taskSource setError:error];
+        // translate error
+        NSError *translatedError = [self errorWithError:error operation:operation];
+        [taskSource setError:translatedError];
     }];
     
     return taskSource.task;
