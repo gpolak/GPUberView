@@ -99,6 +99,7 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
 
 - (void)showInViewController:(UIViewController *)viewController {
     UINavigationController *nVc = [[UINavigationController alloc] initWithRootViewController:self];
+    nVc.modalPresentationStyle = UIModalPresentationFormSheet;
     [viewController presentViewController:nVc animated:YES completion:nil];
 }
 

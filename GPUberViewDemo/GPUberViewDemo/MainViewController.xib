@@ -18,12 +18,22 @@
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HeM-Zi-FfD">
                     <rect key="frame" x="24" y="265" width="272" height="38"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="HeM-Zi-FfD" secondAttribute="height" multiplier="275:38" id="6lX-5I-59k"/>
+                        <constraint firstAttribute="height" constant="38" id="ONn-U7-EzA"/>
+                        <constraint firstAttribute="width" secondItem="HeM-Zi-FfD" secondAttribute="height" multiplier="136:19" id="fwo-FH-lfj"/>
+                        <constraint firstAttribute="height" constant="38" id="qOx-ep-H73"/>
                     </constraints>
-                    <state key="normal" title="Call Uber" image="uber_button">
+                    <state key="normal" title="Call Uber">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="6lX-5I-59k"/>
+                            <exclude reference="qOx-ep-H73"/>
+                        </mask>
+                    </variation>
                     <connections>
                         <action selector="callUber" destination="-1" eventType="touchUpInside" id="6Q9-fC-f37"/>
                     </connections>
@@ -31,16 +41,27 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstAttribute="trailing" secondItem="HeM-Zi-FfD" secondAttribute="trailing" constant="24" id="8Z7-t6-zMp"/>
                 <constraint firstAttribute="centerY" secondItem="HeM-Zi-FfD" secondAttribute="centerY" id="DrN-IV-2a5"/>
+                <constraint firstAttribute="trailing" secondItem="HeM-Zi-FfD" secondAttribute="trailing" constant="24" id="LBy-ve-2AM"/>
                 <constraint firstAttribute="trailing" secondItem="HeM-Zi-FfD" secondAttribute="trailing" constant="24" id="aSC-EB-Dfl"/>
+                <constraint firstItem="HeM-Zi-FfD" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="24" id="iZD-44-P8k"/>
+                <constraint firstItem="HeM-Zi-FfD" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="24" id="jYT-2u-I0g"/>
                 <constraint firstItem="HeM-Zi-FfD" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="24" id="nhf-6y-dAE"/>
                 <constraint firstAttribute="centerX" secondItem="HeM-Zi-FfD" secondAttribute="centerX" id="yUd-as-bWT"/>
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="8Z7-t6-zMp"/>
+                    <exclude reference="LBy-ve-2AM"/>
+                    <exclude reference="aSC-EB-Dfl"/>
+                    <exclude reference="iZD-44-P8k"/>
+                    <exclude reference="jYT-2u-I0g"/>
+                    <exclude reference="nhf-6y-dAE"/>
+                </mask>
+            </variation>
             <point key="canvasLocation" x="140" y="193"/>
         </view>
     </objects>
-    <resources>
-        <image name="uber_button" width="563" height="90"/>
-    </resources>
 </document>
