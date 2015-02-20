@@ -14,7 +14,7 @@
 #import "NSDictionary+URLEncoding.h"
 #import "GPUberUtils.h"
 #import "UIColor+GPUberView.h"
-#import <UIImageView+WebCache.h>
+#import  <UIImageView+AFNetworking.h>
 #import "GPUberViewCell.h"
 #import <PulsingHaloLayer.h>
 #import <Masonry.h>
@@ -608,7 +608,7 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
     
     GPUberViewElement *element = [self.elements objectAtIndex:indexPath.row];
     
-    [cell.productImageView sd_setImageWithURL:element.image];
+    [cell.productImageView setImageWithURL:element.image placeholderImage:nil];
     
     cell.productNameLabel.text = element.displayName;
     
