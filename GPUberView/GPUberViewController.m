@@ -137,7 +137,7 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
         CLLocation *destinationLocation = [[CLLocation alloc] initWithLatitude:self.endLocation.latitude longitude:self.endLocation.longitude];
         [geocoder reverseGeocodeLocation:destinationLocation completionHandler:^(NSArray *placemarks, NSError *error) {
             // If there's an error, no biggie. This is just a convenience
-            if (!error || placemarks.count == 0) {
+            if (!error && placemarks.count > 0) {
                 self.destinationPlacemark = [placemarks firstObject];
             }
         }];
