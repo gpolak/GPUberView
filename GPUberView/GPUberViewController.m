@@ -45,7 +45,6 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
 @property (nonatomic) CLPlacemark *destinationPlacemark;
 @property (nonatomic) NSArray *elements;
 @property (nonatomic) UIColor *previousWindowColor;
-@property (nonatomic) BOOL firstLoad;
 @property (nonatomic) INTULocationRequestID locationRequestId;
 
 @end
@@ -63,8 +62,6 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
         self.serverToken = serverToken;
         self.startLocation = kCLLocationCoordinate2DInvalid;
         self.endLocation = kCLLocationCoordinate2DInvalid;
-        
-        self.firstLoad = NO;
     }
     
     return self;
@@ -142,8 +139,6 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
             }
         }];
     }
-    
-    self.firstLoad = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -158,10 +153,10 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
     self.pulsingHalo.hidden = NO;
     
     // this needs to happen only once AND once the view loads (UI dims settle)
-    if (self.firstLoad) {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
         [self launch];
-        self.firstLoad = NO;
-    }
+    });
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
