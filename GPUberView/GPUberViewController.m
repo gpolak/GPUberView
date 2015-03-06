@@ -141,6 +141,7 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
     }
 }
 
+static BOOL firstLoad = YES;
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
@@ -153,10 +154,14 @@ typedef NS_ENUM(NSInteger, GPUberViewError) {
     self.pulsingHalo.hidden = NO;
     
     // this needs to happen only once AND once the view loads (UI dims settle)
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
+    if (firstLoad) {
         [self launch];
-    });
+        firstLoad = NO;
+    }
+}
+
+- (void)dealloc {
+    firstLoad = YES;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
