@@ -91,21 +91,6 @@ Add your Uber *client id* to receive Uber credits for new user signups. You can 
 uber.clientId = @"your_client_id";
 ```
 
-
-### (Optional) Add User Signup Parameters
-
-Adding one or more of these parameters will make the new user sign-up process smoother in case the user does not have the Uber app installed.
-
-```objective-c
-uber.firstName = @"John";
-uber.lastName = @"Doe";
-uber.email = @"john@example.com";
-uber.countryCode = @"US";
-uber.mobileCountryCode = @"1";
-uber.mobilePhone = @"2125554444";
-uber.zipcode = @"10001";
-```
-
 ### Show GPUberView
 
 ```objective-c
