@@ -13,10 +13,13 @@
 #import "BFTask.h"
 
 @interface BFTaskCompletionSource ()
-@property (nonatomic, retain, readwrite) BFTask *task;
+
+@property (nonatomic, strong, readwrite) BFTask *task;
+
 @end
 
 @interface BFTask (BFTaskCompletionSource)
+
 - (void)setResult:(id)result;
 - (void)setError:(NSError *)error;
 - (void)setException:(NSException *)exception;
@@ -25,19 +28,20 @@
 - (BOOL)trySetError:(NSError *)error;
 - (BOOL)trySetException:(NSException *)exception;
 - (BOOL)trySetCancelled;
+
 @end
 
 @implementation BFTaskCompletionSource
 
 #pragma mark - Initializer
 
-+ (BFTaskCompletionSource *)taskCompletionSource {
-    return [[BFTaskCompletionSource alloc] init];
++ (instancetype)taskCompletionSource {
+    return [[self alloc] init];
 }
 
-- (id)init {
+- (instancetype)init {
     if (self = [super init]) {
-        self.task = [[BFTask alloc] init];
+        _task = [[BFTask alloc] init];
     }
     return self;
 }

@@ -1,6 +1,7 @@
 Bolts
 ============
 [![Build Status](http://img.shields.io/travis/BoltsFramework/Bolts-iOS/master.svg?style=flat)](https://travis-ci.org/BoltsFramework/Bolts-iOS)
+[![Coverage Status](https://coveralls.io/repos/BoltsFramework/Bolts-iOS/badge.svg)](https://coveralls.io/r/BoltsFramework/Bolts-iOS)
 [![Pod Version](http://img.shields.io/cocoapods/v/Bolts.svg?style=flat)](http://cocoadocs.org/docsets/Bolts/)
 [![Pod Platform](http://img.shields.io/cocoapods/p/Bolts.svg?style=flat)](http://cocoadocs.org/docsets/Bolts/)
 [![Pod License](http://img.shields.io/cocoapods/l/Bolts.svg?style=flat)](https://github.com/BoltsFramework/Bolts-iOS/blob/master/LICENSE)
@@ -23,7 +24,7 @@ For more information, see the [Bolts iOS API Reference](http://boltsframework.gi
 # Tasks
 
 To build a truly responsive iOS application, you must keep long-running operations off of the UI thread, and be careful to avoid blocking anything the UI thread might be waiting on. This means you will need to execute various operations in the background. To make this easier, we've added a class called `BFTask`. A task represents the result of an asynchronous operation. Typically, a `BFTask` is returned from an asynchronous function and gives the ability to continue processing the result of the task. When a task is returned from a function, it's already begun doing its job. A task is not tied to a particular threading model: it represents the work being done, not where it is executing. Tasks have many advantages over other methods of asynchronous programming, such as callbacks. `BFTask` is not a replacement for `NSOperation` or GCD. In fact, they play well together. But tasks do fill in some gaps that those technologies don't address.
-* `BFTask` tasks care of managing dependencies for you. Unlike using `NSOperation` for dependency management, you don't have to declare all dependencies before starting a `BFTask`. For example, imagine you need to save a set of objects and each one may or may not require saving child objects. With an `NSOperation`, you would normally have to create operations for each of the child saves ahead of time. But you don't always know before you start the work whether that's going to be necessary. That can make managing dependencies with `NSOperation` very painful. Even in the best case, you have to create your dependencies before the operations that depend on them, which results in code that appears in a different order than it executes. With `BFTask`, you can decide during your operation's work whether there will be subtasks and return the other task in just those cases.
+* `BFTask` takes care of managing dependencies for you. Unlike using `NSOperation` for dependency management, you don't have to declare all dependencies before starting a `BFTask`. For example, imagine you need to save a set of objects and each one may or may not require saving child objects. With an `NSOperation`, you would normally have to create operations for each of the child saves ahead of time. But you don't always know before you start the work whether that's going to be necessary. That can make managing dependencies with `NSOperation` very painful. Even in the best case, you have to create your dependencies before the operations that depend on them, which results in code that appears in a different order than it executes. With `BFTask`, you can decide during your operation's work whether there will be subtasks and return the other task in just those cases.
 * `BFTasks` release their dependencies. `NSOperation` strongly retains its dependencies, so if you have a queue of ordered operations and sequence them using dependencies, you have a leak, because every operation gets retained forever. `BFTasks` release their callbacks as soon as they are run, so everything cleans up after itself. This can reduce memory use, and simplify memory management.
 * `BFTasks` keep track of the state of finished tasks: It tracks whether there was a returned value, the task was cancelled, or if an error occurred. It also has convenience methods for propagating errors. With `NSOperation`, you have to build all of this stuff yourself.
 * `BFTasks` don't depend on any particular threading model. So it's easy to have some tasks perform their work with an operation queue, while others perform work using blocks with GCD. These tasks can depend on each other seamlessly.
@@ -81,7 +82,7 @@ BFTasks use Objective-C blocks, so the syntax should be pretty straightforward. 
     // and provides an NSString as output.
 
     NSNumber *number = task.result;
-    return [NSString stringWithFormat:"%@", number];
+    return [NSString stringWithFormat:@"%@", number];
   )];
 }
 ```
@@ -332,8 +333,8 @@ With these tools, it's easy to make your own asynchronous functions that return 
 func fetchAsync(object: PFObject) -> BFTask {
   var task = BFTaskCompletionSource()
   object.fetchInBackgroundWithBlock {
-    (object: PFObject!, error: NSError!) -> Void in
-    if !error {
+    (object: PFObject?, error: NSError?) -> Void in
+    if error == nil {
       task.setResult(object)
     } else {
       task.setError(error)
@@ -497,7 +498,7 @@ MYCancellationToken *cancellationToken = [[MYCancellationToken alloc] init];
 [cancellationToken cancel];
 ```
 
-**Note:** The cancellation token implementation should be thread-safe.  
+**Note:** The cancellation token implementation should be thread-safe.
 We are likely to add some concept like this to Bolts at some point in the future.
 
 # App Links
@@ -516,25 +517,25 @@ For example, you can use the `BFURL` utility class to parse an incoming URL in y
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
     BFURL *parsedUrl = [BFURL URLWithInboundURL:url sourceApplication:sourceApplication];
-    
+
     // Use the target URL from the App Link to locate content.
     if ([parsedUrl.targetURL.pathComponents[1] isEqualToString:@"profiles"]) {
         // Open a profile viewer.
     }
-    
+
     // You can also check the query string easily.
     NSString *query = parsedUrl.targetQueryParameters[@"query"];
-    
+
     // Apps that have existing deep-linking support and map their App Links to existing
     // deep-linking functionality may instead want to perform these operations on the input URL.
     // Use the target URL from the App Link to locate content.
     if ([parsedUrl.inputURL.pathComponents[1] isEqualToString:@"profiles"]) {
         // Open a profile viewer.
     }
-    
+
     // You can also check the query string easily.
     NSString *query = parsedUrl.inputQueryParameters[@"query"];
-    
+
     // Apps can easily check the Extras and App Link data from the App Link as well.
     NSString *fbAccessToken = parsedUrl.appLinkExtras[@"fb_access_token"];
     NSDictionary *refererData = parsedUrl.appLinkExtras[@"referer"];
@@ -611,7 +612,7 @@ When an application is opened via an App Link, a banner allowing the user to "To
   // self.returnToRefererView is a BFAppLinkReturnToRefererView.
   // You may initialize the view either by loading it from a NIB or programmatically.
   self.returnToRefererController.view = self.returnToRefererView;
-  
+
   // If you have a UINavigationController in the view, then the bar must be shown above it.
   [self.returnToRefererController]
 }
