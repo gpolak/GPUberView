@@ -21,13 +21,13 @@
 @property (nonatomic) NSString *startName;
 @property (nonatomic) NSString *endName;
 
-@property (nonatomic) NSString *firstName;
-@property (nonatomic) NSString *lastName;
-@property (nonatomic) NSString *email;
-@property (nonatomic) NSString *countryCode;
-@property (nonatomic) NSString *mobileCountryCode;
-@property (nonatomic) NSString *mobilePhone;
-@property (nonatomic) NSString *zipcode;
+@property (nonatomic) NSString *firstName __attribute__((deprecated));
+@property (nonatomic) NSString *lastName __attribute__((deprecated));
+@property (nonatomic) NSString *email __attribute__((deprecated));
+@property (nonatomic) NSString *countryCode __attribute__((deprecated));
+@property (nonatomic) NSString *mobileCountryCode __attribute__((deprecated));
+@property (nonatomic) NSString *mobilePhone __attribute__((deprecated));
+@property (nonatomic) NSString *zipcode __attribute__((deprecated));
 
 - (id)initWithServerToken:(NSString *)serverToken;
 

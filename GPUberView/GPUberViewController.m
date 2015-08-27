@@ -482,14 +482,6 @@ static BOOL firstLoad = YES;
                                        [NSNumber numberWithDouble:self.startLocation.longitude], @"pickup_longitude",
                                        nil];
         
-        if (self.firstName) [params setObject:self.firstName forKey:@"first_name"];
-        if (self.lastName) [params setObject:self.lastName forKey:@"last_name"];
-        if (self.email) [params setObject:self.email forKey:@"email"];
-        if (self.countryCode) [params setObject:self.countryCode forKey:@"country_code"];
-        if (self.mobileCountryCode) [params setObject:self.mobileCountryCode forKey:@"mobile_country_code"];
-        if (self.mobilePhone) [params setObject:self.mobilePhone forKey:@"mobile_phone"];
-        if (self.zipcode) [params setObject:self.zipcode forKey:@"zipcode"];
-        
         if (CLLocationCoordinate2DIsValid(self.endLocation)) {
             [params setObject:[NSNumber numberWithDouble:self.endLocation.latitude] forKey:@"dropoff_latitude"];
             [params setObject:[NSNumber numberWithDouble:self.endLocation.longitude] forKey:@"dropoff_longitude"];
