@@ -45,6 +45,17 @@ pod "GPUberView"
 
 To use this library you need a valid *Server Token* from Uber. You can get it here: https://developer.uber.com
 
+### Add url schemes
+
+[For iOS 9 compatibility](http://awkwardhare.com/post/121196006730/quick-take-on-ios-9-url-scheme-changes), add the following scheme to your application's `info.plist`:
+
+```
+<key>LSApplicationQueriesSchemes</key>
+<array>
+    <string>uber</string>
+</array>
+```
+
 ### Import GPUberView
 
 ```objective-c
@@ -54,7 +65,6 @@ To use this library you need a valid *Server Token* from Uber. You can get it he
 ### Initialize the GPUberViewController
 
 Pass in your Uber *server token* for authentication.
-
 
 ```objective-c    
 GPUberViewController *uber = [[GPUberViewController alloc] initWithServerToken:@"your_server_token"];
