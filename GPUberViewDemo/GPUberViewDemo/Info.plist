@@ -4,7 +4,6 @@
 <dict>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string>googlechrome</string>
 		<string>uber</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>

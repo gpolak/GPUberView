@@ -497,7 +497,9 @@ static BOOL firstLoad = YES;
     [[INTULocationManager sharedInstance] cancelLocationRequest:self.locationRequestId];
     
     NSLog(@"[GPUberView] launching Uber with: %@", urlString);
-    [GPUberUtils openURL:[NSURL URLWithString:urlString]];
+    NSURL *url = [NSURL URLWithString:urlString];
+    if (url)
+        [[UIApplication sharedApplication] openURL:url];
 }
 
 

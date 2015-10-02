@@ -43,32 +43,6 @@
     return label;
 }
 
-+ (void)openURL:(NSURL *)url {
-    if (url) {
-        // use Chrome browser if installed
-        if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"googlechrome://"]]) {
-            NSString *scheme = url.scheme;
-            NSString *chromeScheme = nil;
-            if ([scheme isEqualToString:@"http"])
-                chromeScheme = @"googlechrome";
-            else if ([scheme isEqualToString:@"https"])
-                chromeScheme = @"googlechromes";
-            
-            // Proceed only if a valid Google Chrome URI Scheme is available.
-            if (chromeScheme)
-            {
-                NSString *absoluteString = [url absoluteString];
-                NSRange rangeForScheme = [absoluteString rangeOfString:@":"];
-                NSString *urlNoScheme = [absoluteString substringFromIndex:rangeForScheme.location];
-                NSString *chromeURLString = [chromeScheme stringByAppendingString:urlNoScheme];
-                url = [NSURL URLWithString:chromeURLString];
-            }
-        }
-        
-        [[UIApplication sharedApplication] openURL:url];
-    }
-}
-
 + (void)zoomMapView:(MKMapView *)mapView toRoute:(MKRoute *)route animated:(BOOL)animated {
     if (!route)
         return;
