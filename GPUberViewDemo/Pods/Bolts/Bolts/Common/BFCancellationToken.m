@@ -33,10 +33,12 @@
 #pragma mark - Initializer
 
 - (instancetype)init {
-    if (self = [super init]) {
-        _registrations = [NSMutableArray array];
-        _lock = [NSObject new];
-    }
+    self = [super init];
+    if (!self) return nil;
+
+    _registrations = [NSMutableArray array];
+    _lock = [NSObject new];
+
     return self;
 }
 
@@ -94,7 +96,9 @@
 
 - (void)cancelAfterDelay:(int)millis {
     [self throwIfDisposed];
-    NSAssert(millis >= -1, @"Delay must be >= -1");
+    if (millis < -1) {
+        [NSException raise:NSInvalidArgumentException format:@"Delay must be >= -1"];
+    }
 
     if (millis == 0) {
         [self cancel];
@@ -129,7 +133,9 @@
 }
 
 - (void)throwIfDisposed {
-    NSAssert(!self.disposed, @"Object already disposed");
+    if (self.disposed) {
+        [NSException raise:NSInternalInconsistencyException format:@"Object already disposed"];
+    }
 }
 
 @end

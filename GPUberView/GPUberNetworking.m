@@ -7,7 +7,6 @@
 //
 
 #import "GPUberNetworking.h"
-#import <AFNetworking.h>
 #import <JSONModel.h>
 #import "GPUberPrice.h"
 #import "GPUberProduct.h"
@@ -17,51 +16,55 @@
 
 NSString *const GP_UBER_VIEW_DOMAIN = @"GP_UBER_VIEW_DOMAIN";
 
-+ (NSURL *)urlWithEndpoint:(NSString *)endpoint {
++ (NSURL *)urlWithEndpoint:(NSString *)endpoint params:(NSDictionary *)params {
+    NSMutableString *paramString = [NSMutableString new];
+    for (NSString *key in params.allKeys) {
+        [paramString appendFormat:@"%@=%@&", key, [params objectForKey:key]];
+    }
+    if (paramString.length > 0) {
+        // trim last ampersand
+        endpoint = [endpoint stringByAppendingFormat:@"?%@", [paramString substringToIndex:paramString.length - 1]];
+    }
+    
     NSString *base = @"https://api.uber.com";
     NSURL *baseURL = [NSURL URLWithString:base];
     return [NSURL URLWithString:endpoint relativeToURL:baseURL];
 }
 
-+ (NSError *)errorWithError:(NSError *)oldError operation:(AFHTTPRequestOperation *)operation {
-    // preserve original values
-    NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithDictionary:oldError.userInfo];
-    [userInfo setObject:[NSNumber numberWithInteger:oldError.code] forKey:@"original_status"];
-    
-    // add sane status code
-    NSError *error = [NSError errorWithDomain:oldError.domain
-                                         code:operation.response.statusCode
-                                     userInfo:userInfo];
-    
-    return error;
-}
-
 + (BFTask *)GETWithEndpoint:(NSString *)endpoint serverToken:(NSString *)serverToken params:(NSDictionary *)params {
     BFTaskCompletionSource *taskSource = [BFTaskCompletionSource taskCompletionSource];
     
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    configuration.HTTPAdditionalHeaders = @{@"Authorization": [NSString stringWithFormat:@"Token %@", serverToken]};
     
-    AFHTTPRequestSerializer *requestSerializer = [AFHTTPRequestSerializer serializer];
-    [requestSerializer setValue:[NSString stringWithFormat:@"Token %@", serverToken] forHTTPHeaderField:@"Authorization"];
-    manager.requestSerializer = requestSerializer;
+    NSURL *url = [self urlWithEndpoint:endpoint params:params];
     
-    NSURL *url = [self urlWithEndpoint:endpoint];
-    
-    [manager GET:[url absoluteString] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {        
-        if ([responseObject isKindOfClass:[NSDictionary class]] || [responseObject isKindOfClass:[NSArray class]]) {
-            [taskSource setResult:responseObject];
-        } else {
-            NSError *error = [NSError errorWithDomain:@"GPUberView"
-                                                 code:0
-                                             userInfo:[NSDictionary dictionaryWithObject:@"unable to parse response" forKey:NSLocalizedDescriptionKey]];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration];
+    [[session dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if (error) {
             [taskSource setError:error];
+        } else {
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+            NSInteger statusCode = httpResponse.statusCode;
+            if (statusCode < 200 || statusCode >= 300) {
+                NSError *error = [NSError errorWithDomain:@"GPUberView"
+                                                     code:statusCode
+                                                 userInfo:nil];
+                [taskSource setError:error];
+            } else {
+                id responseObject = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+                if ([responseObject isKindOfClass:[NSDictionary class]] || [responseObject isKindOfClass:[NSArray class]]) {
+                    [taskSource setResult:responseObject];
+                } else {
+                    NSError *error = [NSError errorWithDomain:@"GPUberView"
+                                                         code:0
+                                                     userInfo:[NSDictionary dictionaryWithObject:@"unable to parse response" forKey:NSLocalizedDescriptionKey]];
+                    [taskSource setError:error];
+                }
+            }
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        // translate error
-        NSError *translatedError = [self errorWithError:error operation:operation];
-        [taskSource setError:translatedError];
-    }];
+        
+    }] resume];
     
     return taskSource.task;
 }

@@ -14,7 +14,6 @@
 #import "NSDictionary+URLEncoding.h"
 #import "GPUberUtils.h"
 #import "UIColor+GPUberView.h"
-#import  <UIImageView+AFNetworking.h>
 #import "GPUberViewCell.h"
 #import <PulsingHaloLayer.h>
 #import <Masonry.h>
@@ -602,7 +601,13 @@ static BOOL firstLoad = YES;
     
     GPUberViewElement *element = [self.elements objectAtIndex:indexPath.row];
     
-    [cell.productImageView setImageWithURL:element.image placeholderImage:nil];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSData *data = [NSData dataWithContentsOfURL:element.image];
+        UIImage *image = [UIImage imageWithData:data];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            ((GPUberViewCell *)[tableView cellForRowAtIndexPath:indexPath]).productImageView.image = image;
+        });
+    });
     
     cell.productNameLabel.text = element.displayName;
     

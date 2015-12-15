@@ -1,1 +1,0 @@
-PODS_PULSINGHALO_OTHER_LDFLAGS = -framework "QuartzCore"

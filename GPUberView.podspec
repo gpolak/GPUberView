@@ -18,7 +18,6 @@ Pod::Spec.new do |s|
 
   s.frameworks = 'MapKit', 'CoreLocation'
 
-  s.dependency 'AFNetworking', '~> 2.6'
   s.dependency 'JSONModel', "~> 1.0"
   s.dependency 'Bolts', "~> 1.1"
   s.dependency "PulsingHalo"

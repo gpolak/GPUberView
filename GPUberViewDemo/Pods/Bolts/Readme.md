@@ -1,7 +1,7 @@
 Bolts
 ============
 [![Build Status](http://img.shields.io/travis/BoltsFramework/Bolts-iOS/master.svg?style=flat)](https://travis-ci.org/BoltsFramework/Bolts-iOS)
-[![Coverage Status](https://coveralls.io/repos/BoltsFramework/Bolts-iOS/badge.svg)](https://coveralls.io/r/BoltsFramework/Bolts-iOS)
+[![Coverage Status](https://codecov.io/github/BoltsFramework/Bolts-iOS/coverage.svg?branch=master)](https://codecov.io/github/BoltsFramework/Bolts-iOS?branch=master)
 [![Pod Version](http://img.shields.io/cocoapods/v/Bolts.svg?style=flat)](http://cocoadocs.org/docsets/Bolts/)
 [![Pod Platform](http://img.shields.io/cocoapods/p/Bolts.svg?style=flat)](http://cocoadocs.org/docsets/Bolts/)
 [![Pod License](http://img.shields.io/cocoapods/l/Bolts.svg?style=flat)](https://github.com/BoltsFramework/Bolts-iOS/blob/master/LICENSE)
@@ -261,7 +261,7 @@ It's often convenient to have a long chain of success callbacks with only one er
 
 ## Creating Tasks
 
-When you're getting started, you can just use the tasks returned from methods like `findAsync:` or `saveAsync:`. However, for more advanced scenarios, you may want to make your own tasks. To do that, you create a `BFTaskCompletionSource`. This object will let you create a new `BFTask`, and control whether it gets marked as finished or cancelled. After you create a `BFTask`, you'll need to call `setResult:`, `setError:`, or `cancel` to trigger its continuations.
+When you're getting started, you can just use the tasks returned from methods like `findAsync:` or `saveAsync:`. However, for more advanced scenarios, you may want to make your own tasks. To do that, you create a `BFTaskCompletionSource`. This object will let you create a new `BFTask`, and control whether it gets marked as finished or cancelled. After you create a `BFTaskCompletionSource`, you'll need to call `setResult:`, `setError:`, or `cancel` to trigger its continuations.
 
 ```objective-c
 // Objective-C
