@@ -7,7 +7,7 @@
 //
 
 #import "GPUberNetworking.h"
-#import <JSONModel.h>
+#import "JSONModel.h"
 #import "GPUberPrice.h"
 #import "GPUberProduct.h"
 #import "GPUberTime.h"
