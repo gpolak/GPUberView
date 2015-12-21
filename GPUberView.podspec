@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "GPUberView"
-  s.version      = "1.1.2"
+  s.version      = "1.1.4"
   s.summary      = "Summon Uber from your app with 2 lines of code."
   s.homepage     = "https://github.com/gpolak/GPUberView"
   s.license      = { :type => "MIT", :file => "LICENSE" }
@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
 
   s.platform     = :ios, "7.1"
 
-  s.source       = { :git => "https://github.com/gpolak/GPUberView.git", :tag => "1.1.2" }
+  s.source       = { :git => "https://github.com/gpolak/GPUberView.git", :tag => "1.1.4" }
 
   s.source_files = 'GPUberView'
   s.resources = 'GPUberView/*.{xib}', 'GPUberView/*.{png}'
