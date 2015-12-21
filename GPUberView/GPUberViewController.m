@@ -601,13 +601,11 @@ static BOOL firstLoad = YES;
     
     GPUberViewElement *element = [self.elements objectAtIndex:indexPath.row];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSData *data = [NSData dataWithContentsOfURL:element.image];
-        UIImage *image = [UIImage imageWithData:data];
+    [GPUberNetworking imageForUrl:element.image completion:^(UIImage *image, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             ((GPUberViewCell *)[tableView cellForRowAtIndexPath:indexPath]).productImageView.image = image;
         });
-    });
+    }];
     
     cell.productNameLabel.text = element.displayName;
     

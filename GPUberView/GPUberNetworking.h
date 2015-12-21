@@ -18,4 +18,6 @@ extern NSString *const GP_UBER_VIEW_DOMAIN;
 + (BFTask *)timeEstimatesForStart:(CLLocationCoordinate2D)start serverToken:(NSString *)serverToken;
 + (BFTask *)pricesForStart:(CLLocationCoordinate2D)start end:(CLLocationCoordinate2D)end serverToken:(NSString *)serverToken;
 
++ (void)imageForUrl:(NSURL *)url completion:(void (^)(UIImage *image, NSError *error))completion;
+
 @end

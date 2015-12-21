@@ -172,4 +172,26 @@ NSString *const GP_UBER_VIEW_DOMAIN = @"GP_UBER_VIEW_DOMAIN";
     return taskSource.task;
 }
 
++ (void)imageForUrl:(NSURL *)url completion:(void (^)(UIImage *image, NSError *error))completion {
+    if (!completion) {
+        return;
+    }
+    
+    if (!url) {
+        NSError *error = [NSError errorWithDomain:GP_UBER_VIEW_DOMAIN code:-1 userInfo:nil];
+        completion(nil, error);
+    }
+    
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration];
+    [[session dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if (error) {
+            completion(nil, error);
+        } else {
+            UIImage *image = [UIImage imageWithData:data];
+            completion(image, nil);
+        }
+    }] resume];
+}
+
 @end
