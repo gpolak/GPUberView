@@ -1,1 +1,1 @@
-../../../INTULocationManager/Source/INTULocationRequest.h
+../../../INTULocationManager/LocationManager/INTULocationManager/INTULocationRequest.h

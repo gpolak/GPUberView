@@ -20,16 +20,16 @@ PODS:
   - Bolts/AppLinks (1.5.0):
     - Bolts/Tasks
   - Bolts/Tasks (1.5.0)
-  - GPUberView (1.1.1):
+  - GPUberView (1.1.4):
     - BlocksKit (~> 2.2)
     - Bolts (~> 1.1)
-    - INTULocationManager (~> 2.0)
+    - INTULocationManager (~> 4.0)
     - JSONModel (~> 1.0)
     - Masonry (~> 0.6)
     - PulsingHalo
-  - INTULocationManager (2.0.2)
+  - INTULocationManager (4.1.1)
   - JSONModel (1.1.2)
-  - Masonry (0.6.3)
+  - Masonry (0.6.4)
   - PulsingHalo (0.0.1)
 
 DEPENDENCIES:
@@ -42,10 +42,10 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   BlocksKit: 7f422b971407001178d181a43b99014ea2591fe6
   Bolts: 722ab9a4f8b50fc4ed1b9998a5a7a2b3f16d80b4
-  GPUberView: 7d42b9b15b8ddae2da2e1745b0d5ac8030078c0b
-  INTULocationManager: 4eb51ce242d95950676a535208056d9cb246d879
+  GPUberView: 11d507e28dff3c8ea3d12cfe71a330a584e82940
+  INTULocationManager: 83c7373048d583cda57e25eefb9bb8a3675acf16
   JSONModel: 216584d0311b053ff714f1d6cb700dbf890847bc
-  Masonry: ff105a956abcd19a618b2028b121cb638d7a8e2f
+  Masonry: 281802d04d787ea2973179ee8bcb50500579ede2
   PulsingHalo: 1583823bd6c989fff3469bb417bc42f0d268f98e
 
-COCOAPODS: 0.39.0
+COCOAPODS: 0.37.1
