@@ -20,7 +20,7 @@ PODS:
   - Bolts/AppLinks (1.5.0):
     - Bolts/Tasks
   - Bolts/Tasks (1.5.0)
-  - GPUberView (1.1.4):
+  - GPUberView (1.1.5):
     - BlocksKit (~> 2.2)
     - Bolts (~> 1.1)
     - INTULocationManager (~> 4.0)
@@ -42,7 +42,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   BlocksKit: 7f422b971407001178d181a43b99014ea2591fe6
   Bolts: 722ab9a4f8b50fc4ed1b9998a5a7a2b3f16d80b4
-  GPUberView: 11d507e28dff3c8ea3d12cfe71a330a584e82940
+  GPUberView: 1e70e47e3e1280acacaab573520ab351733ae2e4
   INTULocationManager: 83c7373048d583cda57e25eefb9bb8a3675acf16
   JSONModel: 216584d0311b053ff714f1d6cb700dbf890847bc
   Masonry: 281802d04d787ea2973179ee8bcb50500579ede2
