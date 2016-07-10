@@ -1,3 +1,10 @@
+# Note: Use This Instead!
+Uber now has an official [ride request widget](https://developer.uber.com/docs/rides/ride-request-widget). You should probably use it instead of this.
+
+**This repository is no longer being maintained.**
+
+---
+
 # GPUberView
 Summon Uber from your iOS app with 2 lines of code.
 
