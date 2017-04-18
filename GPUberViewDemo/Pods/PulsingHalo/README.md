@@ -10,7 +10,7 @@ It's useful for:
 - **iBeacon**
 - annotions in MapKit
 
-##How to use
+## How to use
 
 1. Add PulsingHaloLayer.h,m into your project
 2. Initiate and add to your view.
@@ -21,9 +21,9 @@ halo.position = self.view.center;
 [self.view.layer addSublayer:halo];
 ````
 
-##Customization
+## Customization
 
-###radius
+### radius
 
 Use `radius` property.
 
@@ -31,7 +31,7 @@ Use `radius` property.
 self.halo.radius = 240.0;
 ````
 
-###color
+### color
 
 Use `backgroundColor` property.
 
@@ -44,18 +44,18 @@ UIColor *color = [UIColor colorWithRed:0.7
 self.halo.backgroundColor = color.CGColor;
 ````
 
-###animation duration
+### animation duration
 
 Use `animationDuration` or `pulseInterval` property.
 
 
-##Demo
+## Demo
 
 You can try to change radius and color properties with demo app.
 
 ![](http://f.cl.ly/items/031W0P1T190q382P063m/beacon_demo3.jpg)
 
 
-##Special Thanks
+## Special Thanks
 
 It's inspired by [SVPulsingAnnotationView](https://github.com/samvermette/SVPulsingAnnotationView).
